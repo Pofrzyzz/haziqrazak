@@ -93,7 +93,7 @@ const proficiencies = [
   { name: "Python", icon: <SiPython /> },
   { name: "Firebase", icon: <SiFirebase /> },
   { name: "MongoDB", icon: <SiMongodb /> },
-  { name: "SQL Server Management Studio", icon: <img src="../../public/logo2.jpg" alt="SQL Server" className="h-6 w-6" /> },
+  { name: "SQL Server Management Studio", icon: <span className="font-bold text-lg text-yellow-500">SSMS</span> },
 ];
 
 // Helper: Format date as DD/MM/YYYY
