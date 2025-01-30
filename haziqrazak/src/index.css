@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Windows XP vibe custom animations or classes */
+
+@keyframes scrollXP {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-scrollXP {
+  animation: scrollXP 8s linear infinite;
+}
