@@ -3,7 +3,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import { db } from "../firebaseConfig";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import {
   FaPlay,
   FaPause,
@@ -14,8 +20,9 @@ import {
 } from "react-icons/fa";
 
 /*
-  Audio files, with Heaven by The Walkmen as first
-  Place them in /public/playlist/ 
+  Audio files in /public/playlist/
+  - Heaven ~ The Walkmen first
+  - Volume=0.02 for initial
 */
 const songs = [
   { title: "Heaven ~ The Walkmen", file: "/playlist/heaven.mp3" },
@@ -32,7 +39,7 @@ export default function SecretPage() {
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [audio, setAudio] = useState(null);
-  const [volume, setVolume] = useState(0.02); // Start volume at 2%
+  const [volume, setVolume] = useState(0.02); // Start at 2% volume
 
   // Guestbook (forum) states
   const [posts, setPosts] = useState([]);
@@ -47,11 +54,12 @@ export default function SecretPage() {
     });
   }, []);
 
-  // 2) Fetch forum posts from Firestore
+  // 2) Fetch forum posts (newest first)
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const snap = await getDocs(collection(db, "forumPosts"));
+        const q = query(collection(db, "forumPosts"), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
         const loaded = snap.docs.map((doc) => ({
           id: doc.id,
           text: doc.data().text,
@@ -64,12 +72,11 @@ export default function SecretPage() {
     fetchPosts();
   }, []);
 
-  // 3) Create/update audio object when track changes
+  // 3) Create/update audio when track changes
   useEffect(() => {
     if (audio) audio.pause();
-
     const newAudio = new Audio(songs[currentSongIndex].file);
-    newAudio.volume = 0.02; // Initial 2% volume for new track
+    newAudio.volume = 0.02;
     setAudio(newAudio);
 
     if (isPlaying) {
@@ -90,7 +97,7 @@ export default function SecretPage() {
     }
   }, [volume, audio]);
 
-  // 5) Music Player Controls
+  // 5) Music controls
   const handlePlayPause = () => {
     if (!audio) return;
     if (isPlaying) {
@@ -115,7 +122,7 @@ export default function SecretPage() {
     setIsPlaying(true);
   };
 
-  // 6) Add a new Guestbook post
+  // 6) Add new post
   const handleAddPost = async () => {
     if (!newPost.trim()) return; // skip empty
     try {
@@ -124,7 +131,8 @@ export default function SecretPage() {
         userId: user?.uid || "anonymous",
         createdAt: Date.now(),
       });
-      setPosts((prev) => [...prev, { id: Date.now(), text: newPost }]);
+      // Insert at top of local array
+      setPosts((prev) => [{ id: Date.now(), text: newPost }, ...prev]);
       setNewPost("");
     } catch (err) {
       console.error("Error adding post:", err);
@@ -132,33 +140,42 @@ export default function SecretPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-blue-300 to-blue-100 text-black font-['Tahoma','Geneva','sans-serif']">
-      {/* Make layout responsive: stack on small, side-by-side on md+ */}
+    <div
+      className="min-h-screen bg-cover bg-center text-black font-['MS_Sans_Serif','Tahoma','Geneva','sans-serif']"
+      style={{ backgroundImage: "url('/bliss.jpg')" }} // place bliss.jpg in /public
+    >
       <div className="flex flex-col md:flex-row h-full">
-        {/* Left Column => Retro Player + Welcome Window, stacked vertically */}
+        {/* LEFT COLUMN => Retro Player + Welcome (XP style, no rounding) */}
         <div className="md:w-1/3 flex flex-col p-4 space-y-4">
-          {/* Retro Player Window */}
-          <div className="border-4 border-gray-400">
-            <div className="bg-blue-500 text-white px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold rounded-t-md shadow-md">
+          {/* RETRO PLAYER (no rounding, single shade of blue #507ACF) */}
+          <div className="border-4 border-[#507ACF]">
+            <div className="bg-[#507ACF] text-white px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md">
               <span>RETRO PLAYER</span>
-              {/* [x] leads back to homepage */}
-              <Link to="/" className="text-white hover:text-red-300 font-extrabold">
+              <Link to="/" className="text-white hover:text-yellow-200 font-extrabold">
                 [x]
               </Link>
             </div>
-            <div className="bg-gray-200 rounded-b-md shadow-md p-4">
+            <div className="bg-[#ECE9D8] shadow-md p-4 text-xs md:text-sm">
               {/* Controls */}
-              <div className="flex items-center mb-3 text-xs">
-                <button onClick={handlePrev} className="bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded mr-1">
+              <div className="flex items-center mb-3">
+                <button
+                  onClick={handlePrev}
+                  className="bg-gray-300 hover:bg-gray-400 px-2 py-1 mr-1"
+                >
                   <FaBackward />
                 </button>
-                <button onClick={handlePlayPause} className="bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded mr-1">
+                <button
+                  onClick={handlePlayPause}
+                  className="bg-gray-300 hover:bg-gray-400 px-2 py-1 mr-1"
+                >
                   {isPlaying ? <FaPause /> : <FaPlay />}
                 </button>
-                <button onClick={handleNext} className="bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded mr-2">
+                <button
+                  onClick={handleNext}
+                  className="bg-gray-300 hover:bg-gray-400 px-2 py-1 mr-2"
+                >
                   <FaForward />
                 </button>
-
                 {/* Volume */}
                 <div className="flex items-center space-x-1">
                   <FaVolumeUp />
@@ -175,7 +192,7 @@ export default function SecretPage() {
               </div>
 
               {/* Playlist */}
-              <div className="border border-gray-300 bg-white rounded p-2 text-xs">
+              <div className="border border-gray-300 p-2 text-xs">
                 {songs.map((song, idx) => {
                   const isCurrent = idx === currentSongIndex;
                   return (
@@ -185,8 +202,10 @@ export default function SecretPage() {
                         setCurrentSongIndex(idx);
                         setIsPlaying(true);
                       }}
-                      className={`flex items-center px-2 py-1 mb-1 rounded cursor-pointer ${
-                        isCurrent ? "bg-blue-200 font-semibold" : "hover:bg-gray-100"
+                      className={`flex items-center px-2 py-1 mb-1 cursor-pointer ${
+                        isCurrent
+                          ? "bg-blue-200 font-semibold"
+                          : "hover:bg-gray-100"
                       }`}
                     >
                       {isCurrent ? (
@@ -202,15 +221,15 @@ export default function SecretPage() {
             </div>
           </div>
 
-          {/* Welcome Window */}
-          <div className="border-4 border-gray-400">
-            <div className="bg-blue-500 text-white px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold rounded-t-md shadow-md">
+          {/* WELCOME WINDOW (no rounding) */}
+          <div className="border-4 border-[#507ACF]">
+            <div className="bg-[#507ACF] text-white px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md">
               <span>WELCOME</span>
-              <Link to="/" className="text-white hover:text-red-300 font-extrabold">
+              <Link to="/" className="text-white hover:text-yellow-200 font-extrabold">
                 [x]
               </Link>
             </div>
-            <div className="bg-gray-200 rounded-b-md shadow-md p-4 text-xs">
+            <div className="bg-[#ECE9D8] shadow-md p-4 text-xs md:text-sm">
               <p className="mb-2 text-gray-700">
                 Hello There! Leave a comment and be remembered forever. Assign a
                 name or don’t! Take your time here to either leave something
@@ -223,46 +242,47 @@ export default function SecretPage() {
           </div>
         </div>
 
-        {/* Right Column => The Guestbook */}
+        {/* RIGHT COLUMN => THE GUESTBOOK (no rounding, newest first) */}
         <div className="md:w-2/3 flex flex-col p-4">
-          <div className="bg-blue-500 text-white px-3 py-2 rounded-t-md shadow-md flex items-center justify-between text-xs md:text-sm font-bold">
-            <span>THE GUESTBOOK</span>
-            <Link to="/" className="text-white hover:text-red-300 font-extrabold">
-              [x]
-            </Link>
-          </div>
+          <div className="border-4 border-[#507ACF]">
+            <div className="bg-[#507ACF] text-white px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md">
+              <span>THE GUESTBOOK</span>
+              <Link to="/" className="text-white hover:text-yellow-200 font-extrabold">
+                [x]
+              </Link>
+            </div>
+            <div className="bg-[#ECE9D8] shadow-md p-4 text-xs md:text-sm flex-grow">
+              <p className="mb-2 text-right text-gray-600">
+                Signed in as: <span className="font-bold">{user?.uid || "Guest"}</span>
+              </p>
+              <textarea
+                value={newPost}
+                onChange={(e) => setNewPost(e.target.value)}
+                className="w-full p-2 text-black mb-2"
+                placeholder="Leave a message..."
+              />
+              <button
+                onClick={handleAddPost}
+                className="bg-[#507ACF] hover:bg-[#3B63A8] text-white px-4 py-1 font-semibold"
+              >
+                Post
+              </button>
 
-          <div className="bg-gray-200 rounded-b-md shadow-md p-4 flex-grow text-xs">
-            <p className="mb-2 text-right text-gray-600">
-              Signed in as: <span className="font-bold">{user?.uid || "Guest"}</span>
-            </p>
-            <textarea
-              value={newPost}
-              onChange={(e) => setNewPost(e.target.value)}
-              className="w-full p-2 text-black rounded mb-2"
-              placeholder="Leave a message..."
-            />
-            <button
-              onClick={handleAddPost}
-              className="bg-blue-400 hover:bg-blue-500 text-white px-4 py-1 rounded font-semibold"
-            >
-              Post
-            </button>
-
-            {/* Display posts */}
-            <div className="mt-4 flex flex-col items-start space-y-2 overflow-y-auto pr-2">
-              {posts.map((p) => {
-                if (!p.text.trim()) return null;
-                return (
-                  <div
-                    key={p.id}
-                    className="bg-white border border-gray-300 px-3 py-1 rounded shadow-sm max-w-max"
-                    style={{ wordWrap: "break-word" }}
-                  >
-                    {p.text}
-                  </div>
-                );
-              })}
+              <div className="mt-4 flex flex-col items-start space-y-2 overflow-y-auto pr-2">
+                {posts.map((p) => {
+                  if (!p.text.trim()) return null;
+                  return (
+                    <div
+                      key={p.id}
+                      className="bg-white border border-gray-300 px-3 py-1 
+                                 text-xs md:text-sm max-w-max"
+                      style={{ wordWrap: "break-word" }}
+                    >
+                      {p.text}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
