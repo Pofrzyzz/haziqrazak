@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+// Additional react-icons for proficiencies
 import {
   FaGithub,
   FaLinkedin,
@@ -13,9 +14,25 @@ import {
   FaTimes,
   FaMoon,
   FaSun,
+  FaDatabase,
+  FaHtml5,
+  FaCss3,
+  FaAws,
 } from "react-icons/fa";
+import {
+  SiGoland,
+  SiAdobephotoshop,
+  SiFlask,
+  SiJavascript,
+  SiNodedotjs,
+  SiReact,
+  SiVite,
+  SiPython,
+  SiFirebase,
+  SiMongodb,
+} from "react-icons/si";
 
-// For fade-in animation
+// Fade-in animation for sections
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -59,7 +76,27 @@ const certifications = [
   },
 ];
 
-// Format date as DD/MM/YYYY
+// Proficiencies data (name + icon)
+const proficiencies = [
+  { name: "Golang", icon: <SiGoland /> },
+  { name: "Adobe Photoshop", icon: <SiAdobephotoshop /> },
+  { name: "Flask", icon: <SiFlask /> },
+  { name: "SQL", icon: <FaDatabase /> },
+  { name: "AWS", icon: <FaAws /> },
+  { name: "JavaScript", icon: <SiJavascript /> },
+  { name: "Node", icon: <SiNodedotjs /> },
+  { name: "React", icon: <SiReact /> },
+  { name: "Vite", icon: <SiVite /> },
+  { name: "HTML", icon: <FaHtml5 /> },
+  { name: "CSS", icon: <FaCss3 /> },
+  { name: "C#", icon: <span className="font-bold text-lg text-blue-500">C#</span> },
+  { name: "Python", icon: <SiPython /> },
+  { name: "Firebase", icon: <SiFirebase /> },
+  { name: "MongoDB", icon: <SiMongodb /> },
+  { name: "SQL Server Management Studio", icon: <img src="../../public/logo2.jpg" alt="SQL Server" className="h-6 w-6" /> },
+];
+
+// Helper: Format date as DD/MM/YYYY
 const getFormattedDate = () => {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -69,10 +106,14 @@ const getFormattedDate = () => {
 
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [theme, setTheme] = useState("modern"); 
-  // "modern" or "xp"
+  const [theme, setTheme] = useState("modern"); // "modern" or "xp"
 
-  // Helper to close mobile menu after link click
+  // Toggle between XP and modern
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "modern" ? "xp" : "modern"));
+  };
+
+  // Smooth scroll
   const smoothScroll = (e, id) => {
     e.preventDefault();
     const section = document.querySelector(id);
@@ -82,62 +123,44 @@ export default function HomePage() {
     setMenuOpen(false);
   };
 
-  // Toggle between themes
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "modern" ? "xp" : "modern"));
-  };
-
-  // Quick checks
+  // Theme checks
   const isXP = theme === "xp";
 
-  // --- THEME STYLES ---
-
   // Container background
-  // - Modern: a dark/blueish gradient
-  // - XP: bliss.jpg (in /public)
+  // - XP => bliss.jpg
+  // - Modern => gradient
   const containerBG = isXP
     ? "bg-cover bg-center"
     : "bg-gradient-to-r from-gray-900 to-blue-900";
 
-  // Navbar background
-  const navbarBG = isXP ? "bg-[#507ACF]" : "bg-[#16213E]"; 
-  // Original modern might have used #16213E or something similar
+  // Navbar BG
+  const navbarBG = isXP ? "bg-[#507ACF]" : "bg-[#16213E]";
 
-  // Mobile dropdown
+  // Mobile dropdown BG
   const mobileDropBG = isXP ? "bg-[#507ACF]" : "bg-[#16213E]";
 
-  // Title bar or "window" background
+  // Title bar BG
   const titleBarBG = isXP ? "bg-[#507ACF]" : "bg-gray-800";
 
-  // Container frame
-  // - XP => thick, sharp border with #507ACF
-  // - Modern => minimal or no border? We can do a subtle border or shadow.
+  // Container border style
   const containerFrame = isXP
     ? "border-4 border-[#507ACF]"
     : "border border-gray-700 shadow-lg";
 
-  // Body inside the container
-  // - XP => #ECE9D8
-  // - Modern => #1F2937 or a dark gray
+  // Window body BG
   const windowBodyBG = isXP ? "bg-[#ECE9D8]" : "bg-[#1F2937]";
 
-  // Overall text color inside the container
+  // Text color inside container
   const containerText = isXP ? "text-black" : "text-gray-100";
 
-  // Title bar text color for modern theme
+  // Title bar text color
   const titleBarTextColor = isXP ? "text-white" : "text-gray-100";
 
-  // Whether or not to show an "[x]" in the title bar
-  // - XP => show it
-  // - Modern => hide it
+  // Show or hide [x]
   const showX = isXP;
 
   // Certification hover style
-  // - XP => maybe hover color
-  // - Modern => none
-  // Let's remove highlight in modern
-  const certHover =
-    isXP ? "hover:bg-[#E1DEC9]" : "hover:bg-transparent";
+  const certHover = isXP ? "hover:bg-[#E1DEC9]" : "hover:bg-transparent";
 
   return (
     <div
@@ -209,6 +232,14 @@ export default function HomePage() {
             >
               Projects
             </a>
+            {/* New Proficiencies Link */}
+            <a
+              href="#proficiencies"
+              onClick={(e) => smoothScroll(e, "#proficiencies")}
+              className="hover:text-yellow-200"
+            >
+              Proficiencies
+            </a>
             <a
               href="#certifications"
               onClick={(e) => smoothScroll(e, "#certifications")}
@@ -251,6 +282,13 @@ export default function HomePage() {
               Projects
             </a>
             <a
+              href="#proficiencies"
+              onClick={(e) => smoothScroll(e, "#proficiencies")}
+              className="hover:text-yellow-200"
+            >
+              Proficiencies
+            </a>
+            <a
               href="#certifications"
               onClick={(e) => smoothScroll(e, "#certifications")}
               className="hover:text-yellow-200"
@@ -272,15 +310,15 @@ export default function HomePage() {
         <div className={`${containerFrame}`}>
           <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
             <span>ABOUT ME</span>
-            {/* If XP => [x], else hide */}
-            {showX && <span className="cursor-pointer">[x]</span>}
+            {showX && <span>[x]</span>}
           </div>
           <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
             <h1 className="text-base md:text-2xl font-extrabold mb-2">
               Haziq Razak
             </h1>
             <p className="mb-2 font-medium text-sm md:text-base">
-              I'm studying Information Technology at Ngee Ann Polytechnic in Singapore.
+              I'm studying Information Technology at Ngee Ann Polytechnic in
+              Singapore.
             </p>
             <p className="mb-2 font-light text-sm md:text-base">
               I love watching movies and taking photos in my spare time. Some of
@@ -298,7 +336,6 @@ export default function HomePage() {
               have been passionate about capturing moments through my lens.
             </p>
 
-            {/* Social */}
             <div className="flex flex-wrap space-x-4 mb-2">
               <a
                 href="mailto:haziqrazak14.27@gmail.com"
@@ -335,7 +372,7 @@ export default function HomePage() {
             <a
               href="/resume.pdf"
               download
-              className={`inline-flex items-center space-x-2 px-3 py-1 font-bold text-xs md:text-sm 
+              className={`inline-flex items-center space-x-2 px-3 py-1 font-bold text-xs md:text-sm
                           ${isXP ? "bg-[#507ACF] text-white hover:bg-[#3B63A8]" : "bg-blue-600 text-white hover:bg-blue-800"}`}
             >
               <FaDownload size={14} />
@@ -508,6 +545,36 @@ export default function HomePage() {
                   </a>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* PROFICIENCIES (New Section) */}
+      <motion.section
+        id="proficiencies"
+        className="container mx-auto px-4 py-4 md:py-6 w-full max-w-5xl"
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeIn}
+      >
+        <div className={`${containerFrame}`}>
+          <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
+            <span>PROFICIENCIES</span>
+            {showX && <span>[x]</span>}
+          </div>
+          <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {proficiencies.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="flex flex-col items-center p-2 border border-gray-300"
+                >
+                  <div className="text-2xl mb-2">{item.icon}</div>
+                  <p className="text-center text-xs md:text-sm">{item.name}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
