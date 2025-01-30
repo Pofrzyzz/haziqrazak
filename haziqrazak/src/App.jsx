@@ -10,6 +10,7 @@ import {
   FaCertificate,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { Analytics } from "@vercel/analytics/react";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
