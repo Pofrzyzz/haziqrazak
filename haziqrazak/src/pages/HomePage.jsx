@@ -106,7 +106,7 @@ const getFormattedDate = () => {
 
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [theme, setTheme] = useState("modern"); // "modern" or "xp"
+  const [theme, setTheme] = useState("xp"); // "modern" or "xp"
 
   // Toggle between XP and modern
   const toggleTheme = () => {
