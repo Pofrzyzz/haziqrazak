@@ -591,7 +591,7 @@ export default function HomePage() {
       >
         <div className={`${containerFrame}`}>
           <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
-            <span>CERTIFICATIONS 📜</span>
+            <span>CERTIFICATIONS</span>
             {showX && <span>[x]</span>}
           </div>
           <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
