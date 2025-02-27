@@ -545,6 +545,25 @@ export default function HomePage() {
                   </a>
                 </div>
               </div>
+              <div className="border border-gray-300 p-3 mt-3">
+                <h3 className="text-sm md:text-base font-semibold">BattleShip Bot</h3>
+                <p className="text-xs text-gray-500">Python</p>
+                <p className="mt-1 text-xs md:text-sm">
+                  In this project, I implemented a battleship bot that allows for users to play a traditional game of battleship against a computer.
+                  I also found a way to connect the bot to Discord. However since hosting requires money, it is not up 24/7. 
+                </p>
+                <div className="flex flex-wrap space-x-3 mt-2">
+                  <a
+                    href="https://github.com/Pofrzyzz/BattleShipGame"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center space-x-1 text-blue-400 hover:underline text-xs md:text-sm"
+                  >
+                    <FaGithub />
+                    <span>GitHub</span>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
