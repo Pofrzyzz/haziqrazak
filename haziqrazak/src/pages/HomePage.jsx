@@ -24,68 +24,47 @@ import {
   SiMongodb,
 } from "react-icons/si";
 
-/* -------------------------------
-   1) Background Image & Particle Layers
+/* ------------------------------
+   1) Particle Configuration 
+   (Monochrome star field)
 ------------------------------- */
-// Background image layer (lowest z-index)
-const BackgroundImage = () => (
-  <div
-    className="absolute inset-0 -z-20"
-    style={{
-      backgroundImage: "url('/space-bg.jpg')",
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      opacity: 0.8,
-      mixBlendMode: "overlay", // creates a cross-dissolve overlay effect
-    }}
-  />
-);
+const particlesOptions = {
+  background: { color: { value: "#00000000" } }, // Transparent to show background image
+  fpsLimit: 60,
+  interactivity: {
+    events: {
+      onHover: { enable: true, mode: "repulse" },
+      resize: true,
+    },
+    modes: {
+      repulse: { distance: 100, duration: 0.4 },
+    },
+  },
+  particles: {
+    color: { value: "#dddddd" },
+    links: {
+      color: "#999999",
+      distance: 120,
+      enable: true,
+      opacity: 0.25,
+      width: 1,
+    },
+    move: {
+      enable: true,
+      speed: 1.2,
+      random: true,
+      outModes: { default: "bounce" },
+    },
+    number: { density: { enable: true, area: 800 }, value: 80 },
+    opacity: { value: 0.4 },
+    shape: { type: "circle" },
+    size: { value: { min: 1, max: 3 } },
+  },
+  detectRetina: true,
+};
 
-// Star-like particles layer
-const StarParticles = ({ particlesInit }) => (
-  <Particles
-    id="tsparticles"
-    init={particlesInit}
-    options={{
-      background: { color: { value: "transparent" } },
-      fpsLimit: 60,
-      interactivity: {
-        events: {
-          onHover: { enable: true, mode: "repulse" },
-          resize: true,
-        },
-        modes: {
-          repulse: { distance: 100, duration: 0.4 },
-        },
-      },
-      particles: {
-        color: { value: "#dddddd" },
-        links: {
-          color: "#999999",
-          distance: 120,
-          enable: true,
-          opacity: 0.25,
-          width: 1,
-        },
-        move: {
-          enable: true,
-          speed: 1.2,
-          random: true,
-          outModes: { default: "bounce" },
-        },
-        number: { density: { enable: true, area: 800 }, value: 80 },
-        opacity: { value: 0.4 },
-        shape: { type: "circle" },
-        size: { value: { min: 1, max: 3 } },
-      },
-      detectRetina: true,
-    }}
-    className="absolute top-0 left-0 w-full h-full -z-10"
-  />
-);
-
-/* -------------------------------
-   2) Data for 5 Boxes (Right Column)
+/* ------------------------------
+   2) Data for Right-Side Boxes
 ------------------------------- */
 const boxesData = [
   {
@@ -341,7 +320,6 @@ const cardVariants = {
   },
 };
 
-/* Pop-up variants: apply a transform based on cursor position */
 const popupVariants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: (cursorPos) => {
@@ -375,7 +353,7 @@ function getFormattedDate() {
    5) Main Component
 ------------------------------- */
 export default function HomePage() {
-  const [selectedBox, setSelectedBox] = useState(null); // which box is open
+  const [selectedBox, setSelectedBox] = useState(null);
   const [cursorPos, setCursorPos] = useState({
     x: 0,
     y: 0,
@@ -388,16 +366,18 @@ export default function HomePage() {
     await loadFull(engine);
   }, []);
 
-  // Global tilt effect for the grid and modal based on cursor position
+  // Global tilt effect: based on mouse position relative to screen center
   const handleGlobalMouseMove = (e) => {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
     const rotateX = (centerY - e.clientY) / 50;
     const rotateY = (e.clientX - centerX) / 50;
-    setGlobalTilt({ transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` });
+    setGlobalTilt({
+      transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+    });
   };
 
-  // When a right-side box is clicked, compute pop-up position based on cursor
+  // When a right-side box is clicked, compute the modal pop-up position
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setCursorPos({
@@ -413,7 +393,6 @@ export default function HomePage() {
     <div
       className="flex flex-col min-h-screen text-gray-100 font-sans overflow-hidden"
       style={{
-        // Background image layer with a slight cross-dissolve overlay effect
         backgroundImage: "url('/space-bg.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -421,13 +400,10 @@ export default function HomePage() {
       }}
       onMouseMove={handleGlobalMouseMove}
     >
-      {/* Background Image Layer */}
+      {/* Background Image Overlay (for cross-dissolve effect) */}
       <div
         className="absolute inset-0 -z-20"
-        style={{
-          opacity: 0.7,
-          mixBlendMode: "overlay",
-        }}
+        style={{ opacity: 0.7, mixBlendMode: "overlay" }}
       />
 
       {/* Star-like Particles */}
@@ -438,24 +414,24 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Top Bar with "HaziqRazak" (shifted to the right) */}
+      {/* Top Bar with "HaziqRazak" (shifted right) */}
       <div className="bg-black bg-opacity-60 backdrop-blur-sm px-8 py-3 z-20">
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">HaziqRazak</h1>
       </div>
 
-      {/* Main Content: Grid is centered vertically and horizontally */}
+      {/* Main Grid: Centered vertically & horizontally with global tilt */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-4" style={globalTilt}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-screen-xl">
-          {/* LEFT COLUMN: About Me (bigger, full height) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
+          {/* LEFT: About Me (larger) */}
           <motion.div
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
-            className="bg-black bg-opacity-70 rounded-lg shadow-xl border border-gray-600 p-10"
+            className="bg-black bg-opacity-70 rounded-lg shadow-2xl border border-gray-600 p-10"
           >
             <h2 className="text-3xl font-bold mb-6">About Me</h2>
             <p className="text-xl mb-6 leading-relaxed">
-              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong> studying Information Technology at Ngee Ann Polytechnic.
+              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>. I study Information Technology at Ngee Ann Polytechnic.
             </p>
             <div className="flex space-x-6 mb-6">
               <motion.a
@@ -505,7 +481,7 @@ export default function HomePage() {
             </motion.a>
           </motion.div>
 
-          {/* RIGHT COLUMN: 5 Boxes */}
+          {/* RIGHT: 5 Boxes */}
           <div className="grid grid-rows-5 gap-6">
             {boxesData.map((box) => (
               <motion.div
@@ -515,7 +491,7 @@ export default function HomePage() {
                 whileInView="visible"
                 whileHover={{ scale: 1.02 }}
                 onClick={(e) => handleBoxClick(box.id, e)}
-                className="bg-black bg-opacity-70 rounded-lg shadow-xl border border-gray-600 p-8 cursor-pointer hover:bg-opacity-80 transition"
+                className="bg-black bg-opacity-70 rounded-lg shadow-2xl border border-gray-600 p-10 cursor-pointer hover:bg-opacity-80 transition"
               >
                 <h2 className="text-2xl font-bold mb-2">{box.title}</h2>
                 <p className="text-lg text-gray-300">Click to see more...</p>
