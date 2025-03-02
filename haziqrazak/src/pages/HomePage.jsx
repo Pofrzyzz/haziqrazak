@@ -363,8 +363,12 @@ export default function HomePage() {
     await loadFull(engine);
   }, []);
 
-  // Global tilt effect: update based on mouse position relative to screen center
+  // Global tilt effect only for desktop (>=768px)
   const handleGlobalMouseMove = (e) => {
+    if (window.innerWidth < 768) {
+      setGlobalTilt({});
+      return;
+    }
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
     const rotateX = (centerY - e.clientY) / 50;
@@ -398,7 +402,10 @@ export default function HomePage() {
       onMouseMove={handleGlobalMouseMove}
     >
       {/* Background Overlay for cross-dissolve effect */}
-      <div className="absolute inset-0 -z-20" style={{ opacity: 0.7, mixBlendMode: "overlay" }} />
+      <div
+        className="absolute inset-0 -z-20"
+        style={{ opacity: 0.7, mixBlendMode: "overlay" }}
+      />
 
       {/* Star-like Particles */}
       <Particles
@@ -414,7 +421,10 @@ export default function HomePage() {
       </div>
 
       {/* Main Layout: Centered grid with global tilt */}
-      <div className="flex-1 flex items-center justify-center relative z-10 px-4" style={globalTilt}>
+      <div
+        className="flex-1 flex items-center justify-center relative z-10 px-4"
+        style={globalTilt}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
           {/* LEFT COLUMN: About Me */}
           <motion.div
@@ -427,7 +437,8 @@ export default function HomePage() {
           >
             <h2 className="text-3xl font-bold mb-6">About Me</h2>
             <p className="text-xl mb-6 leading-relaxed">
-              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>. I study Information Technology at Ngee Ann Polytechnic.
+              My name is <strong>Haziq</strong> and I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>.
+              I study Information Technology at Ngee Ann Polytechnic.
             </p>
             <div className="flex space-x-6 mb-6">
               <motion.a
