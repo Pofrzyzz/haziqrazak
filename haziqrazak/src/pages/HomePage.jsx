@@ -2,19 +2,11 @@ import React, { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import {
-  FaEnvelope,
-  FaGithub,
-  FaLinkedin,
-  FaInstagram,
-  FaDownload,
-} from "react-icons/fa";
+import { FaEnvelope, FaGithub, FaLinkedin, FaInstagram, FaDownload } from "react-icons/fa";
 
-/* 1) Star-like particle config, increased count (80) & slightly brighter (#dddddd). */
+/* 1) Star-like particles config (increased count, bright color) */
 const particlesOptions = {
-  background: {
-    color: "#00000000", // transparent to show the background image
-  },
+  background: { color: "#00000000" }, // transparent to show background image
   fpsLimit: 60,
   interactivity: {
     events: {
@@ -22,13 +14,13 @@ const particlesOptions = {
       resize: true,
     },
     modes: {
-      repulse: { distance: 100, duration: 0.4 },
+      repulse: { distance: 120, duration: 0.4 },
     },
   },
   particles: {
-    color: { value: "#dddddd" }, // brighter star color
+    color: { value: "#dddddd" },
     links: {
-      color: "#999999",
+      color: "#aaaaaa",
       distance: 120,
       enable: true,
       opacity: 0.25,
@@ -42,7 +34,7 @@ const particlesOptions = {
     },
     number: {
       density: { enable: true, area: 800 },
-      value: 80, // increased particle count
+      value: 80, // increased count
     },
     opacity: { value: 0.4 },
     shape: { type: "circle" },
@@ -51,7 +43,7 @@ const particlesOptions = {
   detectRetina: true,
 };
 
-/* 2) The 5 boxes on the right. Each has a title & content for the pop-up. */
+/* 2) The five boxes on the right side (title + content). */
 const boxesData = [
   {
     id: "education",
@@ -200,18 +192,29 @@ const cardVariants = {
   },
 };
 
+/* For the 3D transform near the cursor, we compute rotateX/rotateY from the cursor. */
 const popupVariants = {
   hidden: { opacity: 0, scale: 0.8 },
-  visible: (cursorPos) => ({
-    opacity: 1,
-    scale: 1,
-    x: cursorPos.x,
-    y: cursorPos.y,
-    transition: { duration: 0.4 },
-  }),
+  visible: (cursorPos) => {
+    // Example 3D tilt based on screen center
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const rotateX = (centerY - cursorPos.clientY) / 30;
+    const rotateY = (cursorPos.clientX - centerX) / 30;
+    return {
+      opacity: 1,
+      scale: 1,
+      // position the box near the clicked area
+      x: cursorPos.x,
+      y: cursorPos.y,
+      rotateX,
+      rotateY,
+      transition: { duration: 0.4 },
+    };
+  },
 };
 
-/* 4) Footer date helper */
+/* 4) Helper: date for footer */
 function getFormattedDate() {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -221,27 +224,37 @@ function getFormattedDate() {
 
 export default function HomePage() {
   const [selectedBox, setSelectedBox] = useState(null); // which box is open
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [cursorPos, setCursorPos] = useState({
+    x: 0,
+    y: 0,
+    clientX: 0,
+    clientY: 0,
+  });
 
+  // For star-like particles
   const particlesInit = useCallback(async (engine) => {
     await loadFull(engine);
   }, []);
 
-  // Handle box click => open pop-up near cursor
+  // When user clicks a box => store location
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
+    // e.clientX, e.clientY => mouse coords relative to viewport
+    // We offset the pop-up slightly
     setCursorPos({
       x: e.clientX - rect.left - 100,
       y: e.clientY - rect.top - 100,
+      clientX: e.clientX,
+      clientY: e.clientY,
     });
     setSelectedBox(id);
   };
 
   return (
     <div
-      className="relative min-h-screen w-full text-gray-100 font-sans overflow-hidden"
+      className="flex flex-col min-h-screen text-gray-100"
       style={{
-        backgroundImage: "url('/space-bg.jpg')", // Put your cosmic/nebula image in /public
+        backgroundImage: "url('/space-bg.jpg')", // your space-themed image in /public
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -255,8 +268,8 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* TOP => "HaziqRazak" */}
-      <div className="px-4 py-4 bg-black bg-opacity-60 backdrop-blur-sm">
+      {/* Top "HaziqRazak" bar */}
+      <div className="bg-black bg-opacity-60 backdrop-blur-sm px-4 py-3 z-20">
         <motion.h1
           whileHover={{ scale: 1.05 }}
           className="text-3xl md:text-4xl font-extrabold tracking-wide"
@@ -265,102 +278,102 @@ export default function HomePage() {
         </motion.h1>
       </div>
 
-      {/* LAYOUT: 
-          - Left col => About Me (bigger)
-          - Right col => 5 smaller boxes
-      */}
-      <div className="container mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* LEFT => About Me (bigger) */}
-        <motion.div
-          variants={cardVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-600 p-8"
-        >
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">About Me</h2>
-          <p className="text-base md:text-lg mb-3 leading-relaxed">
-            I’m a <strong>19-year-old software engineer</strong> and{" "}
-            <strong>web developer</strong> based in <strong>Singapore</strong>,
-            specializing in <strong>cloud architecture</strong> and{" "}
-            <strong>cloud computing</strong>. I love creating modern, interactive
-            experiences that scale globally.
-          </p>
-          <p className="text-base md:text-lg mb-4 leading-relaxed">
-            Currently studying <strong>Information Technology</strong> at Ngee Ann
-            Polytechnic, I’ve worked on multiple full-stack applications, leading
-            to a <strong>20% improvement</strong> in deployment efficiency through
-            cloud automation.
-          </p>
-          <div className="flex space-x-4 mb-4">
-            <motion.a
-              whileHover={{ scale: 1.1 }}
-              href="mailto:haziqrazak14.27@gmail.com"
-              className="hover:text-gray-300"
-            >
-              <FaEnvelope size={24} />
-            </motion.a>
-            <motion.a
-              whileHover={{ scale: 1.1 }}
-              href="https://github.com/Pofrzyzz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-300"
-            >
-              <FaGithub size={24} />
-            </motion.a>
-            <motion.a
-              whileHover={{ scale: 1.1 }}
-              href="https://www.linkedin.com/in/haziqrazakiscool/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-300"
-            >
-              <FaLinkedin size={24} />
-            </motion.a>
-            <motion.a
-              whileHover={{ scale: 1.1 }}
-              href="https://www.instagram.com/pofrzcodes"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-gray-300"
-            >
-              <FaInstagram size={24} />
-            </motion.a>
-          </div>
-          <motion.a
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            href="/resume.pdf"
-            download
-            className="inline-flex items-center space-x-2 px-5 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-md transition"
+      {/* Main content => center vertically & horizontally */}
+      <div className="flex-1 flex items-center justify-center relative z-10 px-4">
+        {/* 2 columns => left = About Me (bigger), right = 5 boxes (stacked) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
+          {/* LEFT => ABOUT ME */}
+          <motion.div
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-700 p-8"
           >
-            <FaDownload size={18} />
-            <span>Download Resume</span>
-          </motion.a>
-        </motion.div>
-
-        {/* RIGHT => 5 smaller boxes in a vertical stack */}
-        <div className="grid grid-rows-5 gap-4">
-          {boxesData.map((box) => (
-            <motion.div
-              key={box.id}
-              variants={cardVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.02 }}
-              onClick={(e) => handleBoxClick(box.id, e)}
-              className="bg-black bg-opacity-70 rounded-lg shadow-md border border-gray-600 p-4 cursor-pointer hover:bg-opacity-80 transition"
+            <h2 className="text-2xl md:text-3xl font-bold mb-4">About Me</h2>
+            <p className="text-base md:text-lg mb-3 leading-relaxed">
+              I’m a <strong>19-year-old software engineer</strong> and{" "}
+              <strong>web developer</strong> based in <strong>Singapore</strong>,
+              specializing in <strong>cloud architecture</strong> and{" "}
+              <strong>cloud computing</strong>. I love creating modern,
+              interactive experiences that scale globally.
+            </p>
+            <p className="text-base md:text-lg mb-4 leading-relaxed">
+              Currently studying <strong>Information Technology</strong> at Ngee
+              Ann Polytechnic, I’ve worked on multiple full-stack applications,
+              leading to a <strong>20% improvement</strong> in deployment
+              efficiency through cloud automation.
+            </p>
+            <div className="flex space-x-4 mb-4">
+              <motion.a
+                whileHover={{ scale: 1.1 }}
+                href="mailto:haziqrazak14.27@gmail.com"
+                className="hover:text-gray-300"
+              >
+                <FaEnvelope size={24} />
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.1 }}
+                href="https://github.com/Pofrzyzz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gray-300"
+              >
+                <FaGithub size={24} />
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.1 }}
+                href="https://www.linkedin.com/in/haziqrazakiscool/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gray-300"
+              >
+                <FaLinkedin size={24} />
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.1 }}
+                href="https://www.instagram.com/pofrzcodes"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gray-300"
+              >
+                <FaInstagram size={24} />
+              </motion.a>
+            </div>
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href="/resume.pdf"
+              download
+              className="inline-flex items-center space-x-2 px-5 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-md transition"
             >
-              <h2 className="text-xl font-bold mb-1">{box.title}</h2>
-              <p className="text-sm text-gray-300">Click to see more...</p>
-            </motion.div>
-          ))}
+              <FaDownload size={18} />
+              <span>Download Resume</span>
+            </motion.a>
+          </motion.div>
+
+          {/* RIGHT => 5 boxes in a vertical stack */}
+          <div className="grid grid-rows-5 gap-4">
+            {boxesData.map((box) => (
+              <motion.div
+                key={box.id}
+                variants={cardVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.02 }}
+                onClick={(e) => handleBoxClick(box.id, e)}
+                className="bg-black bg-opacity-70 rounded-lg shadow-md border border-gray-700 p-5 cursor-pointer hover:bg-opacity-80 transition"
+              >
+                <h2 className="text-xl font-bold mb-1">{box.title}</h2>
+                <p className="text-sm text-gray-300">Click to see more...</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* POP-UP Overlays */}
+      {/* POP-UP => 3D transform near cursor */}
       <AnimatePresence>
         {selectedBox && (
           <motion.div
@@ -373,13 +386,13 @@ export default function HomePage() {
           >
             <motion.div
               key="popup"
-              className="bg-[#1a1a1a] bg-opacity-90 text-gray-100 max-w-md w-full p-6 rounded-lg shadow-xl border border-gray-600 relative cursor-auto"
+              className="bg-[#1a1a1a] bg-opacity-90 text-gray-100 max-w-md w-full p-6 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
               custom={cursorPos}
               variants={popupVariants}
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0, scale: 0.8 }}
-              onClick={(e) => e.stopPropagation()} // avoid closing on inside click
+              onClick={(e) => e.stopPropagation()}
             >
               {boxesData.find((b) => b.id === selectedBox)?.content}
             </motion.div>
@@ -389,7 +402,7 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="text-center text-gray-300 py-2 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | Monochrome Space Theme
+        Last Updated: {getFormattedDate()} | Centered Layout + 3D Pop-Ups
       </footer>
     </div>
   );
