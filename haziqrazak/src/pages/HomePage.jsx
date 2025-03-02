@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import {
@@ -8,28 +8,11 @@ import {
   FaLinkedin,
   FaInstagram,
   FaDownload,
-  FaCertificate,
-  FaAws,
-  FaHtml5,
-  FaCss3,
-  FaExternalLinkAlt,
 } from "react-icons/fa";
-import {
-  SiGoland,
-  SiAdobephotoshop,
-  SiFlask,
-  SiJavascript,
-  SiNodedotjs,
-  SiReact,
-  SiVite,
-  SiPython,
-  SiFirebase,
-  SiMongodb,
-} from "react-icons/si";
 
-/* 1) Monochrome Particles: Gray on black */
+/* 1) Minimal star-like config in front of black hole image */
 const particlesOptions = {
-  background: { color: "#000000" },
+  background: { color: "#00000000" }, // Transparent so the image behind shows
   fpsLimit: 60,
   interactivity: {
     events: {
@@ -37,16 +20,16 @@ const particlesOptions = {
       resize: true,
     },
     modes: {
-      repulse: { distance: 80, duration: 0.4 },
+      repulse: { distance: 100, duration: 0.4 },
     },
   },
   particles: {
-    color: { value: "#AAAAAA" }, // Grayish dust
+    color: { value: "#aaaaaa" },
     links: {
-      color: "#888888",
+      color: "#666666",
       distance: 120,
       enable: true,
-      opacity: 0.3,
+      opacity: 0.2,
       width: 1,
     },
     move: {
@@ -57,75 +40,151 @@ const particlesOptions = {
     },
     number: {
       density: { enable: true, area: 800 },
-      value: 40,
+      value: 30,
     },
-    opacity: { value: 0.4 },
+    opacity: { value: 0.3 },
     shape: { type: "circle" },
     size: { value: { min: 1, max: 3 } },
   },
   detectRetina: true,
 };
 
-/* 2) Card Data: certifications & proficiencies */
-const certifications = [
+/* 2) Example boxes data (except About Me). Each has a 'title' and 'content'. */
+const boxesData = [
   {
-    name: "Professional Scrum Master™ I (PSM I)",
-    date: "May 2024",
-    link: "https://www.credly.com/badges/19628356-d1c2-4f2f-9383-4c0139acc829/linked_in_profile",
+    id: "education",
+    title: "Education",
+    content: (
+      <>
+        <h3 className="text-lg font-bold mb-2">Education</h3>
+        <div className="mb-3">
+          <h4 className="font-semibold text-base">Ngee Ann Polytechnic</h4>
+          <p className="text-sm text-gray-400">2023–2026 | IT</p>
+          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+            <li>Member, ICT Society</li>
+            <li>Focus on Cloud & Full-Stack Dev</li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-semibold text-base">Unity Secondary School</h4>
+          <p className="text-sm text-gray-400">2019–2022 | O-levels</p>
+          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+            <li>Vice-President, Unique Media Productions</li>
+            <li>Student Role Model Award</li>
+            <li>Winner, Photography Competition</li>
+          </ul>
+        </div>
+      </>
+    ),
   },
   {
-    name: "Go (Basic)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/9b49f85d5336",
+    id: "experience",
+    title: "Experience",
+    content: (
+      <>
+        <h3 className="text-lg font-bold mb-2">Experience</h3>
+        <div className="mb-3">
+          <h4 className="font-semibold text-base">OCBC Ignite Internship</h4>
+          <p className="text-sm text-gray-400">2025–2026 | Internship</p>
+          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+            <li>Optimized cloud deployments & automated CI/CD</li>
+            <li>Reduced release cycle times by 20%</li>
+          </ul>
+        </div>
+        <div className="mb-3">
+          <h4 className="font-semibold text-base">Photography Assistant</h4>
+          <p className="text-sm text-gray-400">2021–2022 | Freelance</p>
+          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+            <li>Scheduled & organized professional shoots</li>
+            <li>Improved team workflow by 10%</li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-semibold text-base">Bellman, Marriott Tangs Plaza</h4>
+          <p className="text-sm text-gray-400">2022–2024 | Part-Time</p>
+          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+            <li>Enhanced customer service & communication skills</li>
+            <li>Positive guest feedback recognition</li>
+          </ul>
+        </div>
+      </>
+    ),
   },
   {
-    name: "SQL (Basic)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/iframe/f1e17d3784cf",
+    id: "projects",
+    title: "Projects",
+    content: (
+      <>
+        <h3 className="text-lg font-bold mb-2">Projects</h3>
+        <div className="mb-3">
+          <h4 className="font-semibold text-base">Personal Website</h4>
+          <p className="text-sm text-gray-400">React, Next.js, Vite</p>
+          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+            <li>Modern UI & CI/CD pipeline on Vercel</li>
+            <li>Over 1,000 site visits in first month</li>
+          </ul>
+        </div>
+        <div className="mb-3">
+          <h4 className="font-semibold text-base">MyJams</h4>
+          <p className="text-sm text-gray-400">HTML, CSS, JS</p>
+          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+            <li>Showcases personal playlists</li>
+            <li>Experimented with custom audio player</li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-semibold text-base">BattleShip Bot</h4>
+          <p className="text-sm text-gray-400">Python</p>
+          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+            <li>Discord-based game with OOP approach</li>
+            <li>Learned containerization basics</li>
+          </ul>
+        </div>
+      </>
+    ),
   },
   {
-    name: "SQL (Intermediate)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/iframe/b6787b9fb5a0",
+    id: "proficiencies",
+    title: "Proficiencies",
+    content: (
+      <>
+        <h3 className="text-lg font-bold mb-2">Proficiencies</h3>
+        <p className="text-sm text-gray-300 mb-2">Golang, Adobe Photoshop, Flask, SQL, AWS, JavaScript, Node, React, Vite, HTML, CSS, C#, Python, Firebase, MongoDB, SSMS</p>
+      </>
+    ),
   },
   {
-    name: "Python (Basic)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/508683d4132a",
-  },
-  {
-    name: "C# (Basic)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/f856ffdf6442",
+    id: "certifications",
+    title: "Certifications",
+    content: (
+      <>
+        <h3 className="text-lg font-bold mb-2">Certifications</h3>
+        <ul className="space-y-2">
+          <li>
+            <span className="font-semibold">Professional Scrum Master™ I (PSM I)</span> - May 2024
+          </li>
+          <li>
+            <span className="font-semibold">Go (Basic)</span> - HackerRank
+          </li>
+          <li>
+            <span className="font-semibold">SQL (Basic)</span> - HackerRank
+          </li>
+          <li>
+            <span className="font-semibold">SQL (Intermediate)</span> - HackerRank
+          </li>
+          <li>
+            <span className="font-semibold">Python (Basic)</span> - HackerRank
+          </li>
+          <li>
+            <span className="font-semibold">C# (Basic)</span> - HackerRank
+          </li>
+        </ul>
+      </>
+    ),
   },
 ];
 
-const proficiencies = [
-  { name: "Golang", icon: <SiGoland /> },
-  { name: "Adobe Photoshop", icon: <SiAdobephotoshop /> },
-  { name: "Flask", icon: <SiFlask /> },
-  { name: "SQL", icon: <FaCertificate /> },
-  { name: "AWS", icon: <FaAws /> },
-  { name: "JavaScript", icon: <SiJavascript /> },
-  { name: "Node", icon: <SiNodedotjs /> },
-  { name: "React", icon: <SiReact /> },
-  { name: "Vite", icon: <SiVite /> },
-  { name: "HTML", icon: <FaHtml5 /> },
-  { name: "CSS", icon: <FaCss3 /> },
-  {
-    name: "C#",
-    icon: <span className="font-bold text-lg text-gray-200">C#</span>,
-  },
-  { name: "Python", icon: <SiPython /> },
-  { name: "Firebase", icon: <SiFirebase /> },
-  { name: "MongoDB", icon: <SiMongodb /> },
-  {
-    name: "SQL Server Management Studio",
-    icon: <span className="font-bold text-lg text-gray-300">SSMS</span>,
-  },
-];
-
-/* 3) Card animation variants */
+/* 3) Basic fade/scale variants for each card & pop-up */
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: {
@@ -136,7 +195,21 @@ const cardVariants = {
   },
 };
 
-/* 4) Footer date helper */
+/* Pop-up variants that incorporate 3D transform near the cursor */
+const popupVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: (cursorPos) => ({
+    opacity: 1,
+    scale: 1,
+    x: cursorPos.x,
+    y: cursorPos.y,
+    rotateX: 0,
+    rotateY: 0,
+    transition: { duration: 0.4 },
+  }),
+};
+
+/* 4) Helper: Footer date */
 function getFormattedDate() {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -145,30 +218,35 @@ function getFormattedDate() {
 }
 
 export default function HomePage() {
-  /* 5) Initialize full tsparticles for the gold dust background */
+  const [selectedBox, setSelectedBox] = useState(null); // which box is open
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+
+  const handleBoxClick = (id, e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    // We'll offset pop-up by half of its size for a better effect, but let's keep it simple
+    setCursorPos({
+      x: e.clientX - rect.left - 100,
+      y: e.clientY - rect.top - 100,
+    });
+    setSelectedBox(id);
+  };
+
+  // Particles init
   const particlesInit = useCallback(async (engine) => {
     await loadFull(engine);
   }, []);
 
-  /* 6) 3D "tilt" effect based on cursor location */
-  const [tiltStyle, setTiltStyle] = useState({});
-
-  function handleMouseMove(e) {
-    const { clientX, clientY } = e;
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const rotateX = (centerY - clientY) / 60;
-    const rotateY = (clientX - centerX) / 60;
-
-    setTiltStyle({
-      transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-      transition: "transform 0.05s linear",
-    });
-  }
-
   return (
-    <div className="relative min-h-screen w-full bg-black text-gray-100 font-sans overflow-hidden">
-      {/* Monochrome Particles */}
+    <div
+      className="relative min-h-screen w-full text-gray-100 font-sans overflow-hidden"
+      style={{
+        backgroundImage: "url('/blackhole-bg.jpg')", // place your black hole/nebula image in /public
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      {/* Minimal star-like particles in front of the image */}
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -176,8 +254,8 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Title at the top */}
-      <div className="py-4 px-4">
+      {/* Title at the top (like in your reference screenshot) */}
+      <div className="px-4 py-4 bg-black bg-opacity-50 backdrop-blur-sm">
         <motion.h1
           whileHover={{ scale: 1.05 }}
           className="text-3xl md:text-4xl font-extrabold tracking-wide"
@@ -186,21 +264,18 @@ export default function HomePage() {
         </motion.h1>
       </div>
 
-      {/* Main container with 3D tilt effect */}
-      <div
-        className="container mx-auto px-4 pb-6"
-        onMouseMove={handleMouseMove}
-        style={tiltStyle}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* ABOUT ME */}
+      {/* BENTO-STYLE LAYOUT: 6 boxes => 1 center (About Me) + 5 around it */}
+      <main className="container mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* We place About Me in the center => row 1 col 2 */}
+          <div className="hidden md:block" />
+          {/* ABOUT ME => center */}
           <motion.div
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-[#2C2C2E] rounded-lg shadow-lg border border-gray-700 p-5"
+            className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-700 p-6"
           >
             <h2 className="text-xl md:text-2xl font-bold mb-3">About Me</h2>
             <p className="text-base mb-3 leading-snug">
@@ -263,209 +338,86 @@ export default function HomePage() {
               <span>Download Resume</span>
             </motion.a>
           </motion.div>
-
-          {/* EDUCATION */}
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-[#2C2C2E] rounded-lg shadow-lg border border-gray-700 p-5"
-          >
-            <h2 className="text-xl md:text-2xl font-bold mb-3">Education</h2>
-            <div className="mb-4">
-              <h3 className="font-semibold text-base">Ngee Ann Polytechnic</h3>
-              <p className="text-sm text-gray-400">2023–2026 | IT</p>
-              <ul className="list-disc list-inside mt-1 text-sm space-y-1">
-                <li>Member, ICT Society</li>
-                <li>Focus on Cloud & Full-Stack Dev</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold text-base">Unity Secondary School</h3>
-              <p className="text-sm text-gray-400">2019–2022 | O-levels</p>
-              <ul className="list-disc list-inside mt-1 text-sm space-y-1">
-                <li>Vice-President, Unique Media Productions</li>
-                <li>Student Role Model Award</li>
-                <li>Winner, Photography Competition</li>
-              </ul>
-            </div>
-          </motion.div>
-
-          {/* EXPERIENCE */}
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-[#2C2C2E] rounded-lg shadow-lg border border-gray-700 p-5"
-          >
-            <h2 className="text-xl md:text-2xl font-bold mb-3">Experience</h2>
-            <div className="mb-4">
-              <h3 className="font-semibold text-base">OCBC Ignite Internship</h3>
-              <p className="text-sm text-gray-400">2025–2026 | Internship</p>
-              <ul className="list-disc list-inside mt-1 text-sm space-y-1">
-                <li>Optimized cloud deployments & automated CI/CD</li>
-                <li>Reduced release cycle times by 20%</li>
-              </ul>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-base">Photography Assistant</h3>
-              <p className="text-sm text-gray-400">2021–2022 | Freelance</p>
-              <ul className="list-disc list-inside mt-1 text-sm space-y-1">
-                <li>Scheduled & organized professional shoots</li>
-                <li>Improved team workflow by 10%</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold text-base">Bellman, Marriott Tangs Plaza</h3>
-              <p className="text-sm text-gray-400">2022–2024 | Part-Time</p>
-              <ul className="list-disc list-inside mt-1 text-sm space-y-1">
-                <li>Enhanced customer service & communication skills</li>
-                <li>Positive guest feedback recognition</li>
-              </ul>
-            </div>
-          </motion.div>
-
-          {/* PROJECTS */}
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-[#2C2C2E] rounded-lg shadow-lg border border-gray-700 p-5"
-          >
-            <h2 className="text-xl md:text-2xl font-bold mb-3">Projects</h2>
-            <div className="mb-4">
-              <h3 className="font-semibold text-base">Personal Website</h3>
-              <p className="text-sm text-gray-400">React, Next.js, Vite</p>
-              <ul className="list-disc list-inside mt-1 text-sm space-y-1">
-                <li>Modern UI & CI/CD pipeline on Vercel</li>
-                <li>Over 1,000 site visits in first month</li>
-              </ul>
-              <div className="flex space-x-2 mt-2">
-                <a
-                  href="https://github.com/Pofrzyzz/haziqrazak"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
-                >
-                  <FaGithub />
-                  <span>GitHub</span>
-                </a>
-                <a
-                  href="https://haziqrazak.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
-                >
-                  <FaExternalLinkAlt />
-                  <span>Website</span>
-                </a>
-              </div>
-            </div>
-            <div className="mb-4">
-              <h3 className="font-semibold text-base">MyJams</h3>
-              <p className="text-sm text-gray-400">HTML, CSS, JS</p>
-              <ul className="list-disc list-inside mt-1 text-sm space-y-1">
-                <li>Showcases personal playlists</li>
-                <li>Experimented with custom audio player</li>
-              </ul>
-              <div className="flex space-x-2 mt-2">
-                <a
-                  href="https://pofrzyzz.github.io/MyJams/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
-                >
-                  <FaExternalLinkAlt />
-                  <span>Live Demo</span>
-                </a>
-              </div>
-            </div>
-            <div>
-              <h3 className="font-semibold text-base">BattleShip Bot</h3>
-              <p className="text-sm text-gray-400">Python</p>
-              <ul className="list-disc list-inside mt-1 text-sm space-y-1">
-                <li>Discord-based game with OOP approach</li>
-                <li>Learned containerization basics</li>
-              </ul>
-              <div className="flex space-x-2 mt-2">
-                <a
-                  href="https://github.com/Pofrzyzz/BattleShipGame"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
-                >
-                  <FaGithub />
-                  <span>GitHub</span>
-                </a>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* PROFICIENCIES */}
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-[#2C2C2E] rounded-lg shadow-lg border border-gray-700 p-5"
-          >
-            <h2 className="text-xl md:text-2xl font-bold mb-3">Proficiencies</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {proficiencies.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col items-center p-2 border border-gray-700 rounded text-sm hover:bg-gray-700 transition"
-                >
-                  <div className="text-2xl mb-1">{item.icon}</div>
-                  <p className="text-center">{item.name}</p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* CERTIFICATIONS */}
-          <motion.div
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-[#2C2C2E] rounded-lg shadow-lg border border-gray-700 p-5"
-          >
-            <h2 className="text-xl md:text-2xl font-bold mb-3">Certifications</h2>
-            <div className="space-y-2">
-              {certifications.map((cert, i) => (
-                <a
-                  key={i}
-                  href={cert.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block border border-gray-700 p-3 rounded hover:bg-gray-700 transition text-sm"
-                >
-                  <div className="flex items-center space-x-3">
-                    <FaCertificate className="text-gray-300" />
-                    <div>
-                      <p className="font-semibold">{cert.name}</p>
-                      <p className="text-gray-400 text-xs">{cert.date}</p>
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </motion.div>
+          <div className="hidden md:block" />
         </div>
-      </div>
+
+        {/* Next row => 5 boxes around the center => we can do row2 col 1-3 and row3 col 1-3, 
+            but let's keep it simple: 2 rows, 3 columns total = 6 spots 
+            Spot(1,1) => Education
+            Spot(1,2) => Experience
+            Spot(1,3) => Projects
+            Spot(2,1) => Proficiencies
+            Spot(2,2) => Certifications
+            Spot(2,3) => (blank) or we can skip
+        */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          {boxesData.slice(0, 3).map((box) => (
+            <motion.div
+              key={box.id}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
+              onClick={(e) => handleBoxClick(box.id, e)}
+              className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-700 p-5 cursor-pointer hover:bg-opacity-80 transition"
+            >
+              <h2 className="text-xl font-bold">{box.title}</h2>
+              <p className="text-sm text-gray-400 mt-1">Click to see more...</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          {boxesData.slice(3).map((box) => (
+            <motion.div
+              key={box.id}
+              variants={cardVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
+              onClick={(e) => handleBoxClick(box.id, e)}
+              className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-700 p-5 cursor-pointer hover:bg-opacity-80 transition"
+            >
+              <h2 className="text-xl font-bold">{box.title}</h2>
+              <p className="text-sm text-gray-400 mt-1">Click to see more...</p>
+            </motion.div>
+          ))}
+        </div>
+      </main>
+
+      {/* POP-UP OVERLAY */}
+      <AnimatePresence>
+        {selectedBox && (
+          <motion.div
+            key="overlay"
+            className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50"
+            onClick={() => setSelectedBox(null)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            {/* We find the selected box content */}
+            <motion.div
+              key="popup"
+              className="bg-[#1c1c1e] text-gray-100 max-w-md w-full p-6 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
+              custom={cursorPos}
+              variants={popupVariants}
+              initial="hidden"
+              animate="visible"
+              exit={{ opacity: 0, scale: 0.8 }}
+              onClick={(e) => e.stopPropagation()} // so we don't close on inside click
+            >
+              {boxesData.find((b) => b.id === selectedBox)?.content}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* FOOTER */}
-      <footer className="text-center text-gray-400 py-2 text-xs">
-        Last Updated: {getFormattedDate()} | Monochrome Bento with Particles
+      <footer className="text-center text-gray-300 py-2 text-xs bg-black bg-opacity-50 backdrop-blur-sm">
+        Last Updated: {getFormattedDate()} | 6 Boxes + Nebula/Black Hole Background
       </footer>
     </div>
   );
