@@ -5,10 +5,10 @@ const Navbar = ({ smoothScroll }) => {
   return (
     <nav className="fixed top-0 w-full bg-transparent backdrop-blur-md p-4 z-50 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        <motion.h1 whileHover={{ scale: 1.05 }} className="text-2xl font-bold text-gray-100">
+        <motion.h1 whileHover={{ scale: 1.05 }} className="text-3xl font-bold text-gray-100">
           HaziqRazak
         </motion.h1>
-        <ul className="flex space-x-6 text-xl">
+        <ul className="flex space-x-8 text-2xl">
           {["About Me", "Education", "Experience", "Projects", "Certifications"].map(
             (item) => (
               <li key={item}>
