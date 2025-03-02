@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 import { motion } from "framer-motion";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import { db } from "../firebaseConfig";
@@ -22,8 +24,8 @@ const songs = [
 ];
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7 } },
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
 export default function SecretPage() {
@@ -35,7 +37,33 @@ export default function SecretPage() {
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState("");
 
-  // Anonymous auth
+  // Particle configuration (same as HomePage)
+  const particlesOptions = {
+    fpsLimit: 60,
+    interactivity: {
+      events: {
+        onHover: { enable: true, mode: "repulse" },
+        resize: true,
+      },
+      modes: { repulse: { distance: 100, duration: 0.4 } },
+    },
+    particles: {
+      color: { value: "#888888" },
+      links: { color: "#555555", distance: 150, enable: true, opacity: 0.3, width: 1 },
+      move: { enable: true, speed: 1, random: true, outModes: { default: "bounce" } },
+      number: { density: { enable: true, area: 800 }, value: 50 },
+      opacity: { value: 0.5 },
+      shape: { type: "circle" },
+      size: { value: { min: 1, max: 3 } },
+    },
+    detectRetina: true,
+  };
+
+  const particlesInit = useCallback(async (engine) => {
+    await loadFull(engine);
+  }, []);
+
+  // Anonymous Auth
   useEffect(() => {
     const auth = getAuth();
     signInAnonymously(auth).catch(console.error);
@@ -62,7 +90,7 @@ export default function SecretPage() {
     fetchPosts();
   }, []);
 
-  // Audio effect: create/update audio on track change
+  // Update audio on track change
   useEffect(() => {
     if (audio) audio.pause();
     const newAudio = new Audio(songs[currentSongIndex].file);
@@ -119,115 +147,121 @@ export default function SecretPage() {
     }
   };
 
-  // Design variables
-  const containerBG = "bg-animate bg-gradient-to-br from-indigo-900 via-blue-900 to-indigo-900";
-  const cardFrame = "border border-blue-700 shadow-2xl rounded-xl bg-gray-900 text-gray-100";
-  const headerStyle = "bg-blue-800 rounded-t-xl px-6 py-4 text-2xl font-bold";
-  const contentStyle = "p-6 text-xl";
+  // Dark theme design variables
+  const containerBG = "bg-gradient-to-br from-gray-900 to-black";
+  const cardFrame = "border border-gray-700 shadow-xl rounded-lg bg-gray-800 text-gray-300";
+  const headerStyle = "bg-gray-700 rounded-t-lg px-4 py-3 text-base font-bold";
+  const contentStyle = "p-4 text-xs";
 
   return (
-    <div className={`min-h-screen w-full ${containerBG} font-sans`}>
-      <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8" initial="hidden" animate="visible" variants={sectionVariants}>
-        {/* Audio Player Card */}
-        <motion.div className={cardFrame} whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}>
-          <div className={headerStyle}>
-            AUDIO PLAYER
-            <Link to="/" className="float-right text-gray-100 hover:text-yellow-300 font-bold">
-              [Close]
-            </Link>
-          </div>
-          <div className={contentStyle}>
-            <div className="flex items-center space-x-4 mb-4">
-              <button onClick={handlePrev} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
-                <FaBackward size={24} />
-              </button>
-              <button onClick={handlePlayPause} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
-                {isPlaying ? <FaPause size={24} /> : <FaPlay size={24} />}
-              </button>
-              <button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">
-                <FaForward size={24} />
-              </button>
-              <div className="flex items-center space-x-2">
-                <FaVolumeUp size={24} />
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.01"
-                  value={volume}
-                  onChange={(e) => setVolume(Number(e.target.value))}
-                  className="w-24"
-                />
+    <div className="relative min-h-screen w-full overflow-hidden font-sans">
+      <Particles
+        id="tsparticles-secret"
+        init={particlesInit}
+        options={particlesOptions}
+        className="absolute top-0 left-0 w-full h-full"
+      />
+      <div className={`relative z-10 ${containerBG} min-h-screen`}>
+        <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6" initial="hidden" animate="visible" variants={sectionVariants}>
+          {/* Audio Player Card */}
+          <motion.div className={cardFrame} whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}>
+            <div className={headerStyle}>
+              AUDIO PLAYER
+              <Link to="/" className="float-right text-gray-300 hover:text-gray-100 font-bold">
+                [Close]
+              </Link>
+            </div>
+            <div className={contentStyle}>
+              <div className="flex items-center space-x-3 mb-3">
+                <button onClick={handlePrev} className="bg-gray-600 hover:bg-gray-500 px-3 py-1 rounded">
+                  <FaBackward size={16} />
+                </button>
+                <button onClick={handlePlayPause} className="bg-gray-600 hover:bg-gray-500 px-3 py-1 rounded">
+                  {isPlaying ? <FaPause size={16} /> : <FaPlay size={16} />}
+                </button>
+                <button onClick={handleNext} className="bg-gray-600 hover:bg-gray-500 px-3 py-1 rounded">
+                  <FaForward size={16} />
+                </button>
+                <div className="flex items-center space-x-1">
+                  <FaVolumeUp size={16} />
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value={volume}
+                    onChange={(e) => setVolume(Number(e.target.value))}
+                    className="w-16"
+                  />
+                </div>
+              </div>
+              <div className="border border-gray-700 p-2 rounded">
+                {songs.map((song, idx) => {
+                  const isCurrent = idx === currentSongIndex;
+                  return (
+                    <div
+                      key={song.title}
+                      onClick={() => {
+                        setCurrentSongIndex(idx);
+                        setIsPlaying(true);
+                      }}
+                      className={`flex items-center px-2 py-1 mb-1 cursor-pointer rounded ${isCurrent ? "bg-gray-700 font-semibold" : "hover:bg-gray-600"}`}
+                    >
+                      {isCurrent ? (
+                        <FaCompactDisc className="animate-spin mr-2 text-gray-400" size={16} />
+                      ) : (
+                        <FaCompactDisc className="mr-2 text-gray-600" size={16} />
+                      )}
+                      <span>{song.title}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-            <div className="border border-blue-700 p-4 rounded">
-              {songs.map((song, idx) => {
-                const isCurrent = idx === currentSongIndex;
-                return (
-                  <div
-                    key={song.title}
-                    onClick={() => {
-                      setCurrentSongIndex(idx);
-                      setIsPlaying(true);
-                    }}
-                    className={`flex items-center px-4 py-2 mb-2 cursor-pointer rounded ${
-                      isCurrent ? "bg-blue-700 font-semibold" : "hover:bg-gray-800"
-                    }`}
-                  >
-                    {isCurrent ? (
-                      <FaCompactDisc className="animate-spin mr-3 text-blue-300" size={28} />
-                    ) : (
-                      <FaCompactDisc className="mr-3 text-gray-400" size={28} />
-                    )}
-                    <span>{song.title}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
 
-        {/* Guestbook Card */}
-        <motion.div className={cardFrame} whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}>
-          <div className={headerStyle}>
-            GUESTBOOK
-            <Link to="/" className="float-right text-gray-100 hover:text-yellow-300 font-bold">
-              [Close]
-            </Link>
-          </div>
-          <div className={contentStyle + " flex flex-col"}>
-            <p className="mb-4 text-right text-gray-300">
-              Signed in as: <span className="font-bold">{user?.uid || "Guest"}</span>
-            </p>
-            <textarea
-              value={newPost}
-              onChange={(e) => setNewPost(e.target.value)}
-              className="w-full p-4 text-gray-900 mb-4 rounded"
-              placeholder="Leave a message..."
-            />
-            <button
-              onClick={handleAddPost}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 font-semibold rounded"
-            >
-              Post
-            </button>
-            <div className="mt-6 space-y-4 overflow-y-auto max-h-64">
-              {posts.map((p) => {
-                if (!p.text.trim()) return null;
-                return (
-                  <div
-                    key={p.id}
-                    className="bg-gray-100 border border-blue-700 px-4 py-3 rounded text-gray-900"
-                    style={{ wordWrap: "break-word" }}
-                  >
-                    {p.text}
-                  </div>
-                );
-              })}
+          {/* Guestbook Card */}
+          <motion.div className={cardFrame} whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}>
+            <div className={headerStyle}>
+              GUESTBOOK
+              <Link to="/" className="float-right text-gray-300 hover:text-gray-100 font-bold">
+                [Close]
+              </Link>
             </div>
-          </div>
+            <div className={contentStyle + " flex flex-col"}>
+              <p className="mb-2 text-right text-gray-500">
+                Signed in as: <span className="font-bold">{user?.uid || "Guest"}</span>
+              </p>
+              <textarea
+                value={newPost}
+                onChange={(e) => setNewPost(e.target.value)}
+                className="w-full p-2 text-gray-900 mb-2 rounded"
+                placeholder="Leave a message..."
+              />
+              <button
+                onClick={handleAddPost}
+                className="bg-gray-600 hover:bg-gray-500 text-gray-100 px-3 py-1 font-semibold rounded"
+              >
+                Post
+              </button>
+              <div className="mt-3 space-y-2 overflow-y-auto max-h-48">
+                {posts.map((p) => {
+                  if (!p.text.trim()) return null;
+                  return (
+                    <div
+                      key={p.id}
+                      className="bg-gray-200 border border-gray-700 px-2 py-1 rounded text-gray-900 text-xs"
+                      style={{ wordWrap: "break-word" }}
+                    >
+                      {p.text}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Animated gradient background */
+/* Animated gradient background for fallback (if particles lag) */
 @keyframes gradientAnimation {
   0% {
     background-position: 0% 50%;
@@ -15,20 +15,20 @@
   }
 }
 
-.bg-animate {
+.bg-gradient-to-br {
   background-size: 200% 200%;
   animation: gradientAnimation 15s ease infinite;
 }
 
-/* Global transform effect on hover for interactive elements */
+/* Global hover transform for interactive elements */
 .hover-transform:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
   transition: transform 0.3s ease;
 }
 
 body {
   cursor: default;
-  background-color: #1f2937;
+  background-color: #1f1f1f;
 }
 
 a,
