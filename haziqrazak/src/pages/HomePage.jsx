@@ -73,10 +73,10 @@ const boxesData = [
         <h3 className="text-2xl font-bold mb-2">Education</h3>
         <div className="mb-3">
           <h4 className="font-semibold text-xl">Ngee Ann Polytechnic</h4>
-          <p className="text-lg text-gray-300">2023–2026 | IT</p>
+          <p className="text-lg text-gray-300">2023–2026 | Information Technology</p>
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
-            <li>Member, ICT Society</li>
-            <li>Focus on Cloud & Full-Stack Dev</li>
+            <li>Participated in ICT Society</li>
+            <li>Specialization in Cloud Computing & Cloud Architecture</li>
           </ul>
         </div>
         <div>
@@ -85,7 +85,7 @@ const boxesData = [
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Vice-President, Unique Media Productions</li>
             <li>Student Role Model Award</li>
-            <li>Winner, Photography Competition</li>
+            <li>Winner of Intra-School Photography Competition</li>
           </ul>
         </div>
       </>
@@ -101,16 +101,16 @@ const boxesData = [
           <h4 className="font-semibold text-xl">OCBC Ignite Internship</h4>
           <p className="text-lg text-gray-300">2025–2026 | Internship</p>
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
-            <li>Optimized cloud deployments & automated CI/CD</li>
-            <li>Reduced release cycle times by 20%</li>
+            <li>Upcoming Internship for my 3rd Year in Polytechnic</li>
+            <li>Official Start Date: 17th March 2025</li>
           </ul>
         </div>
         <div className="mb-3">
           <h4 className="font-semibold text-xl">Photography Assistant</h4>
           <p className="text-lg text-gray-300">2021–2022 | Freelance</p>
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
-            <li>Scheduled & organized professional shoots</li>
-            <li>Improved team workflow by 10%</li>
+            <li>Gained hands on training for professional photoshoots</li>
+            <li>Gained experience in setting up sets at Gardens by the Bay and Botanic Gardens</li>
           </ul>
         </div>
         <div>
@@ -135,7 +135,7 @@ const boxesData = [
           <p className="text-lg text-gray-300">React, Next.js, Vite</p>
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Modern UI & CI/CD pipeline on Vercel</li>
-            <li>Over 1,000 site visits in first month</li>
+            <li>Integrated my previous experience into this project</li>
           </ul>
           <div className="flex space-x-3 mt-2">
             <a
@@ -182,7 +182,7 @@ const boxesData = [
           <p className="text-lg text-gray-300">Python</p>
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Discord-based game with OOP approach</li>
-            <li>Learned containerization basics</li>
+            <li>Meant to be a refresher project for python</li>
           </ul>
           <div className="flex space-x-3 mt-2">
             <a
@@ -428,8 +428,8 @@ export default function HomePage() {
           >
             <h2 className="text-3xl font-bold mb-6">About Me</h2>
             <p className="text-xl mb-6 leading-relaxed">
-              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>.
-              I study Information Technology at Ngee Ann Polytechnic.
+              My name is <strong>Haziq</strong> and I’m a <strong>19-year-old</strong> developer from <strong>Singapore</strong>.
+              I'm currently pursuing a Diploma in Information Technology at Ngee Ann Polytechnic. 
             </p>
             <div className="flex space-x-6 mb-6">
               <motion.a
