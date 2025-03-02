@@ -24,7 +24,7 @@ import {
   SiMongodb,
 } from "react-icons/si";
 
-/* ------------------------------
+/* -------------------------------
    1) Particle Configuration 
    (Monochrome star field)
 ------------------------------- */
@@ -63,8 +63,8 @@ const particlesOptions = {
   detectRetina: true,
 };
 
-/* ------------------------------
-   2) Data for Right-Side Boxes
+/* -------------------------------
+   2) Data for 5 Boxes (Right Column)
 ------------------------------- */
 const boxesData = [
   {
@@ -366,7 +366,7 @@ export default function HomePage() {
     await loadFull(engine);
   }, []);
 
-  // Global tilt effect: based on mouse position relative to screen center
+  // Global tilt effect: compute transform based on mouse position relative to screen center
   const handleGlobalMouseMove = (e) => {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
@@ -377,7 +377,7 @@ export default function HomePage() {
     });
   };
 
-  // When a right-side box is clicked, compute the modal pop-up position
+  // When a right-side box is clicked, compute modal pop-up position based on cursor
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setCursorPos({
@@ -400,11 +400,8 @@ export default function HomePage() {
       }}
       onMouseMove={handleGlobalMouseMove}
     >
-      {/* Background Image Overlay (for cross-dissolve effect) */}
-      <div
-        className="absolute inset-0 -z-20"
-        style={{ opacity: 0.7, mixBlendMode: "overlay" }}
-      />
+      {/* Background Image Overlay for cross-dissolve effect */}
+      <div className="absolute inset-0 -z-20" style={{ opacity: 0.7, mixBlendMode: "overlay" }} />
 
       {/* Star-like Particles */}
       <Particles
@@ -414,15 +411,15 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Top Bar with "HaziqRazak" (shifted right) */}
+      {/* Top Bar with "HaziqRazak", shifted right */}
       <div className="bg-black bg-opacity-60 backdrop-blur-sm px-8 py-3 z-20">
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">HaziqRazak</h1>
       </div>
 
-      {/* Main Grid: Centered vertically & horizontally with global tilt */}
+      {/* Main Layout: Centered grid with global tilt */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-4" style={globalTilt}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
-          {/* LEFT: About Me (larger) */}
+          {/* LEFT COLUMN: About Me (larger, nearly full-screen) */}
           <motion.div
             variants={cardVariants}
             initial="hidden"
@@ -481,7 +478,7 @@ export default function HomePage() {
             </motion.a>
           </motion.div>
 
-          {/* RIGHT: 5 Boxes */}
+          {/* RIGHT COLUMN: 5 Boxes */}
           <div className="grid grid-rows-5 gap-6">
             {boxesData.map((box) => (
               <motion.div
@@ -516,6 +513,7 @@ export default function HomePage() {
               key="popup"
               onMouseMove={handleGlobalMouseMove}
               style={globalTilt}
+              custom={cursorPos} // Pass custom cursorPos to popupVariants
               className="bg-[#1a1a1a] bg-opacity-80 text-gray-100 max-w-4xl w-full p-10 rounded-lg shadow-2xl border border-gray-700 relative cursor-auto"
               variants={popupVariants}
               initial="hidden"
