@@ -306,7 +306,7 @@ const boxesData = [
 ];
 
 /* -------------------------------
-   3) Animation Variants
+   3) Animation Variants (Faster)
 ------------------------------- */
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
@@ -314,7 +314,7 @@ const cardVariants = {
     opacity: 1,
     scale: 1,
     y: 0,
-    transition: { duration: 0.6 },
+    transition: { duration: 0.3 },
   },
 };
 
@@ -332,7 +332,7 @@ const popupVariants = {
       y: cursorPos.y,
       rotateX,
       rotateY,
-      transition: { duration: 0.4 },
+      transition: { duration: 0.2 },
     };
   },
 };
@@ -364,7 +364,7 @@ export default function HomePage() {
     await loadFull(engine);
   }, []);
 
-  // Global tilt effect: update based on mouse position
+  // Global tilt effect: update based on mouse position relative to screen center
   const handleGlobalMouseMove = (e) => {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
@@ -375,7 +375,7 @@ export default function HomePage() {
     });
   };
 
-  // Compute modal pop-up position on box click
+  // When a right-side box is clicked, compute modal pop-up position based on cursor
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setCursorPos({
@@ -414,10 +414,10 @@ export default function HomePage() {
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">HaziqRazak</h1>
       </div>
 
-      {/* Main Layout: Centered grid (smaller grid) with global tilt */}
+      {/* Main Layout: Centered grid with global tilt */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-4" style={globalTilt}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
-          {/* LEFT COLUMN: About Me (larger) */}
+          {/* LEFT COLUMN: About Me */}
           <motion.div
             onMouseMove={handleGlobalMouseMove}
             style={globalTilt}
@@ -428,7 +428,8 @@ export default function HomePage() {
           >
             <h2 className="text-3xl font-bold mb-6">About Me</h2>
             <p className="text-xl mb-6 leading-relaxed">
-              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>. I study Information Technology at Ngee Ann Polytechnic.
+              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>.
+              I study Information Technology at Ngee Ann Polytechnic.
             </p>
             <div className="flex space-x-6 mb-6">
               <motion.a
