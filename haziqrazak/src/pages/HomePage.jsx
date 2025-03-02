@@ -27,12 +27,11 @@ import {
   SiMongodb,
 } from "react-icons/si";
 
-/* ===============================
-   1) Particle Configuration 
-   (monochrome star field)
-=============================== */
+/* -------------------------------
+   Particle Configuration (Stars)
+------------------------------- */
 const particlesOptions = {
-  background: { color: "#00000000" }, // transparent to reveal the image
+  background: { color: "#00000000" }, // transparent so background image shows
   fpsLimit: 60,
   interactivity: {
     events: {
@@ -69,10 +68,9 @@ const particlesOptions = {
   detectRetina: true,
 };
 
-/* ===============================
-   2) Data for Pop-up Boxes
-   (The 5 boxes on the right)
-=============================== */
+/* -------------------------------
+   Boxes Data for the 5 right-side boxes
+------------------------------- */
 const boxesData = [
   {
     id: "education",
@@ -214,10 +212,24 @@ const boxesData = [
     content: (
       <>
         <h3 className="text-xl font-bold mb-2">Proficiencies</h3>
-        <p className="text-sm text-gray-300">
-          Golang, Adobe Photoshop, Flask, SQL, AWS, JavaScript, Node, React, Vite,
-          HTML, CSS, C#, Python, Firebase, MongoDB, SSMS
-        </p>
+        <ul className="list-disc list-inside text-sm space-y-1 text-gray-300">
+          <li>Golang</li>
+          <li>Adobe Photoshop</li>
+          <li>Flask</li>
+          <li>SQL</li>
+          <li>AWS</li>
+          <li>JavaScript</li>
+          <li>Node</li>
+          <li>React</li>
+          <li>Vite</li>
+          <li>HTML</li>
+          <li>CSS</li>
+          <li>C#</li>
+          <li>Python</li>
+          <li>Firebase</li>
+          <li>MongoDB</li>
+          <li>SSMS</li>
+        </ul>
       </>
     ),
   },
@@ -227,7 +239,7 @@ const boxesData = [
     content: (
       <>
         <h3 className="text-xl font-bold mb-2">Certifications</h3>
-        <ul className="space-y-2 text-sm text-gray-300">
+        <ul className="list-disc list-inside text-sm space-y-1 text-gray-300">
           <li>
             <a
               href="https://www.credly.com/badges/19628356-d1c2-4f2f-9383-4c0139acc829/linked_in_profile"
@@ -300,9 +312,9 @@ const boxesData = [
   },
 ];
 
-/* ===============================
+/* -------------------------------
    3) Animation Variants
-=============================== */
+------------------------------- */
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: {
@@ -313,29 +325,21 @@ const cardVariants = {
   },
 };
 
-/* The pop-up variants use a custom function that computes rotateX and rotateY based on cursor position */
-const popupVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: (cursorPos) => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const rotateX = (centerY - cursorPos.clientY) / 30;
-    const rotateY = (cursorPos.clientX - centerX) / 30;
-    return {
-      opacity: 1,
-      scale: 1,
-      x: cursorPos.x,
-      y: cursorPos.y,
-      rotateX,
-      rotateY,
-      transition: { duration: 0.4 },
-    };
-  },
+/* For the About Me box, apply a 3D tilt based on the cursor */
+const aboutMeTilt = (cursorPos) => {
+  const centerX = window.innerWidth / 4; // left column center approx.
+  const centerY = window.innerHeight / 2;
+  const rotateX = (centerY - cursorPos.clientY) / 40;
+  const rotateY = (cursorPos.clientX - centerX) / 40;
+  return {
+    transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+    transition: "transform 0.1s linear",
+  };
 };
 
-/* ===============================
+/* -------------------------------
    4) Footer Date Helper
-=============================== */
+------------------------------- */
 function getFormattedDate() {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -343,11 +347,11 @@ function getFormattedDate() {
   ).padStart(2, "0")}/${today.getFullYear()}`;
 }
 
-/* ===============================
+/* -------------------------------
    5) Main Component
-=============================== */
+------------------------------- */
 export default function HomePage() {
-  const [selectedBox, setSelectedBox] = useState(null); // which box is open
+  const [selectedBox, setSelectedBox] = useState(null); // open pop-up id
   const [cursorPos, setCursorPos] = useState({
     x: 0,
     y: 0,
@@ -359,11 +363,11 @@ export default function HomePage() {
     await loadFull(engine);
   }, []);
 
-  // When a box is clicked, compute the pop-up position based on cursor
+  // When a right-side box is clicked, store its pop-up position
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setCursorPos({
-      x: e.clientX - rect.left - 100, // adjust as needed
+      x: e.clientX - rect.left - 100,
       y: e.clientY - rect.top - 100,
       clientX: e.clientX,
       clientY: e.clientY,
@@ -371,17 +375,26 @@ export default function HomePage() {
     setSelectedBox(id);
   };
 
+  // For the About Me tilt effect, update style on mouse move over its container
+  const [aboutStyle, setAboutStyle] = useState({});
+  const handleAboutMouseMove = (e) => {
+    setAboutStyle(aboutMeTilt({
+      clientX: e.clientX,
+      clientY: e.clientY,
+    }));
+  };
+
   return (
     <div
       className="relative min-h-screen w-full text-gray-100 font-sans overflow-hidden"
       style={{
-        backgroundImage: "url('/space-bg.jpg')", // Your space-themed image in public folder
+        backgroundImage: "url('/space-bg.jpg')", // Place your space-themed image in public folder
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Star Particles */}
+      {/* Star-like Particles */}
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -389,21 +402,20 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Top Bar with "HaziqRazak" */}
+      {/* Top Bar with "HaziqRazak" (static) */}
       <div className="bg-black bg-opacity-60 backdrop-blur-sm px-4 py-3 z-20">
-        <motion.h1
-          whileHover={{ scale: 1.05 }}
-          className="text-3xl md:text-4xl font-extrabold tracking-wide"
-        >
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">
           HaziqRazak
-        </motion.h1>
+        </h1>
       </div>
 
-      {/* Main Layout: Left column is About Me, Right column is 5 boxes */}
+      {/* Main Layout: Two Columns */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
-          {/* LEFT: About Me (bigger) */}
+          {/* LEFT COLUMN: About Me with Tilt Effect */}
           <motion.div
+            onMouseMove={handleAboutMouseMove}
+            style={aboutStyle}
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
@@ -471,7 +483,7 @@ export default function HomePage() {
             </motion.a>
           </motion.div>
 
-          {/* RIGHT: 5 Boxes */}
+          {/* RIGHT COLUMN: 5 Boxes */}
           <div className="grid grid-rows-5 gap-4">
             {boxesData.map((box) => (
               <motion.div
@@ -491,7 +503,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* POP-UP OVERLAY with 3D transform based on cursor */}
+      {/* POP-UP OVERLAY (No transform effect; slightly transparent) */}
       <AnimatePresence>
         {selectedBox && (
           <motion.div
@@ -504,9 +516,8 @@ export default function HomePage() {
           >
             <motion.div
               key="popup"
-              className="bg-[#1a1a1a] bg-opacity-90 text-gray-100 max-w-md w-full p-6 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
-              custom={cursorPos}
-              variants={popupVariants}
+              className="bg-[#1a1a1a] bg-opacity-80 text-gray-100 max-w-md w-full p-6 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
+              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }}
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0, scale: 0.8 }}
@@ -520,7 +531,7 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="text-center text-gray-300 py-2 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | Monochrome Space Theme with 3D Pop-Ups
+        Last Updated: {getFormattedDate()} | Monochrome Space Theme
       </footer>
     </div>
   );
