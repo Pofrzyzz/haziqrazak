@@ -8,7 +8,6 @@ import {
   FaLinkedin,
   FaInstagram,
   FaDownload,
-  FaCertificate,
   FaExternalLinkAlt,
 } from "react-icons/fa";
 import {
@@ -110,7 +109,7 @@ const boxesData = [
           <p className="text-lg text-gray-300">2021–2022 | Freelance</p>
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Gained hands on training for professional photoshoots</li>
-            <li>Gained experience in setting up sets at Gardens by the Bay and Botanic Gardens</li>
+            <li>Experience setting up sets at Gardens by the Bay and Botanic Gardens</li>
           </ul>
         </div>
         <div>
@@ -135,7 +134,7 @@ const boxesData = [
           <p className="text-lg text-gray-300">React, Next.js, Vite</p>
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Modern UI & CI/CD pipeline on Vercel</li>
-            <li>Integrated my previous experience into this project</li>
+            <li>Integrated previous experience into this project</li>
           </ul>
           <div className="flex space-x-3 mt-2">
             <a
@@ -182,7 +181,7 @@ const boxesData = [
           <p className="text-lg text-gray-300">Python</p>
           <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Discord-based game with OOP approach</li>
-            <li>Meant to be a refresher project for python</li>
+            <li>Learned containerization basics</li>
           </ul>
           <div className="flex space-x-3 mt-2">
             <a
@@ -428,8 +427,7 @@ export default function HomePage() {
           >
             <h2 className="text-3xl font-bold mb-6">About Me</h2>
             <p className="text-xl mb-6 leading-relaxed">
-              My name is <strong>Haziq</strong> and I’m a <strong>19-year-old</strong> developer from <strong>Singapore</strong>.
-              I'm currently pursuing a Diploma in Information Technology at Ngee Ann Polytechnic. 
+              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>. I study Information Technology at Ngee Ann Polytechnic.
             </p>
             <div className="flex space-x-6 mb-6">
               <motion.a
@@ -487,7 +485,11 @@ export default function HomePage() {
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
-                whileHover={{ scale: 1.05, rotateZ: 2, boxShadow: "0px 8px 20px rgba(0,0,0,0.8)" }}
+                whileHover={{
+                  scale: 1.05,
+                  rotateZ: 2,
+                  boxShadow: "0px 8px 20px rgba(0,0,0,0.8)",
+                }}
                 onClick={(e) => handleBoxClick(box.id, e)}
                 className="bg-black bg-opacity-70 rounded-lg shadow-2xl border border-gray-600 p-8 cursor-pointer hover:bg-opacity-80 transition"
               >
