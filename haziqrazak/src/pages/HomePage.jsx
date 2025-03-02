@@ -9,9 +9,6 @@ import {
   FaInstagram,
   FaDownload,
   FaCertificate,
-  FaAws,
-  FaHtml5,
-  FaCss3,
   FaExternalLinkAlt,
 } from "react-icons/fa";
 import {
@@ -28,10 +25,10 @@ import {
 } from "react-icons/si";
 
 /* -------------------------------
-   Particle Configuration (Stars)
+   1) Star-like Particles (monochrome)
 ------------------------------- */
 const particlesOptions = {
-  background: { color: "#00000000" }, // transparent so background image shows
+  background: { color: "#00000000" },
   fpsLimit: 60,
   interactivity: {
     events: {
@@ -69,7 +66,7 @@ const particlesOptions = {
 };
 
 /* -------------------------------
-   Boxes Data for the 5 right-side boxes
+   2) Data for 5 Right-Side Boxes
 ------------------------------- */
 const boxesData = [
   {
@@ -325,16 +322,24 @@ const cardVariants = {
   },
 };
 
-/* For the About Me box, apply a 3D tilt based on the cursor */
-const aboutMeTilt = (cursorPos) => {
-  const centerX = window.innerWidth / 4; // left column center approx.
-  const centerY = window.innerHeight / 2;
-  const rotateX = (centerY - cursorPos.clientY) / 40;
-  const rotateY = (cursorPos.clientX - centerX) / 40;
-  return {
-    transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-    transition: "transform 0.1s linear",
-  };
+/* Pop-up variants with transform effect based on cursor position */
+const popupVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: (cursorPos) => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const rotateX = (centerY - cursorPos.clientY) / 30;
+    const rotateY = (cursorPos.clientX - centerX) / 30;
+    return {
+      opacity: 1,
+      scale: 1,
+      x: cursorPos.x,
+      y: cursorPos.y,
+      rotateX,
+      rotateY,
+      transition: { duration: 0.4 },
+    };
+  },
 };
 
 /* -------------------------------
@@ -351,19 +356,44 @@ function getFormattedDate() {
    5) Main Component
 ------------------------------- */
 export default function HomePage() {
-  const [selectedBox, setSelectedBox] = useState(null); // open pop-up id
+  const [selectedBox, setSelectedBox] = useState(null); // ID of pop-up box
   const [cursorPos, setCursorPos] = useState({
     x: 0,
     y: 0,
     clientX: 0,
     clientY: 0,
   });
+  const [aboutStyle, setAboutStyle] = useState({});
+  const [modalStyle, setModalStyle] = useState({});
 
   const particlesInit = useCallback(async (engine) => {
     await loadFull(engine);
   }, []);
 
-  // When a right-side box is clicked, store its pop-up position
+  // Compute tilt effect based on mouse position relative to element's center
+  const computeTilt = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const deltaX = e.clientX - centerX;
+    const deltaY = centerY - e.clientY;
+    const rotateX = deltaY / 20;
+    const rotateY = deltaX / 20;
+    return { transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` };
+  };
+
+  // About Me box tilt effect handler
+  const handleAboutMouseMove = (e) => {
+    setAboutStyle(computeTilt(e));
+  };
+
+  // Modal pop-up tilt effect handler
+  const handleModalMouseMove = (e) => {
+    // For modal, we compute tilt relative to the modal container
+    setModalStyle(computeTilt(e));
+  };
+
+  // When a right-side box is clicked, store pop-up position based on cursor
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setCursorPos({
@@ -375,20 +405,11 @@ export default function HomePage() {
     setSelectedBox(id);
   };
 
-  // For the About Me tilt effect, update style on mouse move over its container
-  const [aboutStyle, setAboutStyle] = useState({});
-  const handleAboutMouseMove = (e) => {
-    setAboutStyle(aboutMeTilt({
-      clientX: e.clientX,
-      clientY: e.clientY,
-    }));
-  };
-
   return (
     <div
       className="relative min-h-screen w-full text-gray-100 font-sans overflow-hidden"
       style={{
-        backgroundImage: "url('/space-bg.jpg')", // Place your space-themed image in public folder
+        backgroundImage: "url('/space-bg.jpg')", // Your space-themed background in public folder
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -404,15 +425,13 @@ export default function HomePage() {
 
       {/* Top Bar with "HaziqRazak" (static) */}
       <div className="bg-black bg-opacity-60 backdrop-blur-sm px-4 py-3 z-20">
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">
-          HaziqRazak
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">HaziqRazak</h1>
       </div>
 
-      {/* Main Layout: Two Columns */}
+      {/* Main Layout: Centered both vertically and horizontally */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
-          {/* LEFT COLUMN: About Me with Tilt Effect */}
+          {/* LEFT COLUMN: About Me with tilt effect */}
           <motion.div
             onMouseMove={handleAboutMouseMove}
             style={aboutStyle}
@@ -422,18 +441,9 @@ export default function HomePage() {
             className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-600 p-8"
           >
             <h2 className="text-2xl md:text-3xl font-bold mb-4">About Me</h2>
-            <p className="text-base md:text-lg mb-3 leading-relaxed">
-              I’m a <strong>19-year-old software engineer</strong> and{" "}
-              <strong>web developer</strong> based in <strong>Singapore</strong>,
-              specializing in <strong>cloud architecture</strong> and{" "}
-              <strong>cloud computing</strong>. I love creating modern, interactive
-              experiences that scale globally.
-            </p>
             <p className="text-base md:text-lg mb-4 leading-relaxed">
-              Currently studying <strong>Information Technology</strong> at Ngee
-              Ann Polytechnic, I’ve worked on multiple full-stack applications,
-              leading to a <strong>20% improvement</strong> in deployment efficiency
-              through cloud automation.
+              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>.
+              Currently, I study Information Technology at Ngee Ann Polytechnic.
             </p>
             <div className="flex space-x-4 mb-4">
               <motion.a
@@ -503,7 +513,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* POP-UP OVERLAY (No transform effect; slightly transparent) */}
+      {/* POP-UP MODAL WITH 3D TILT (same effect as About Me) */}
       <AnimatePresence>
         {selectedBox && (
           <motion.div
@@ -516,8 +526,10 @@ export default function HomePage() {
           >
             <motion.div
               key="popup"
+              onMouseMove={handleModalMouseMove}
+              style={modalStyle}
               className="bg-[#1a1a1a] bg-opacity-80 text-gray-100 max-w-md w-full p-6 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
-              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }}
+              variants={popupVariants}
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0, scale: 0.8 }}
@@ -531,7 +543,7 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="text-center text-gray-300 py-2 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | Monochrome Space Theme
+        Last Updated: {getFormattedDate()} | Monochrome Space Theme with 3D Pop-Ups
       </footer>
     </div>
   );
