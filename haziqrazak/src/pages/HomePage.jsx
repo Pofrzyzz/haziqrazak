@@ -530,7 +530,7 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="text-center text-gray-300 py-3 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | Monochrome Space Theme with Global 3D Transform
+        Last Updated: {getFormattedDate()} | Haziq Razak's Portfolio
       </footer>
     </div>
   );
