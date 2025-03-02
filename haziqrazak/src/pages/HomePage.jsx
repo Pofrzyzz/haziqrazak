@@ -1,8 +1,7 @@
 import React, { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import { motion } from "framer-motion";
 import {
   FaGithub,
   FaLinkedin,
@@ -27,57 +26,55 @@ import {
   SiMongodb,
 } from "react-icons/si";
 
-// Particle configuration for interactive free-flowing particles
+/* 
+  Particle configuration for subtle, free-flowing effects.
+  Particles move gently in the background and repel on hover. 
+*/
 const particlesOptions = {
   fpsLimit: 60,
   interactivity: {
     events: {
-      onHover: {
-        enable: true,
-        mode: "repulse",
-      },
+      onHover: { enable: true, mode: "repulse" },
       resize: true,
     },
     modes: {
-      repulse: {
-        distance: 100,
-        duration: 0.4,
-      },
+      repulse: { distance: 100, duration: 0.4 },
     },
   },
   particles: {
-    color: { value: "#888888" },
+    color: { value: "#888" },
     links: {
-      color: "#555555",
+      color: "#555",
       distance: 150,
       enable: true,
       opacity: 0.3,
       width: 1,
     },
-    collisions: { enable: false },
     move: {
-      direction: "none",
       enable: true,
-      outModes: { default: "bounce" },
-      random: true,
       speed: 1,
-      straight: false,
+      random: true,
+      outModes: { default: "bounce" },
     },
-    number: { density: { enable: true, area: 800 }, value: 50 },
-    opacity: { value: 0.5 },
+    number: {
+      density: { enable: true, area: 800 },
+      value: 45,
+    },
+    opacity: { value: 0.4 },
     shape: { type: "circle" },
     size: { value: { min: 1, max: 3 } },
   },
   detectRetina: true,
 };
 
-// Animation variants for cards
+// Animate-in for card-like sections
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-// Example certifications
+/* Example certifications with short text. 
+   You could expand these to highlight official credentials or add bullet points. */
 const certifications = [
   {
     name: "Professional Scrum Master™ I (PSM I)",
@@ -89,49 +86,25 @@ const certifications = [
     date: "HackerRank",
     link: "https://www.hackerrank.com/certificates/9b49f85d5336",
   },
-  {
-    name: "SQL (Basic)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/iframe/f1e17d3784cf",
-  },
-  {
-    name: "SQL (Intermediate)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/iframe/b6787b9fb5a0",
-  },
-  {
-    name: "Python (Basic)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/508683d4132a",
-  },
-  {
-    name: "C# (Basic)",
-    date: "HackerRank",
-    link: "https://www.hackerrank.com/certificates/f856ffdf6442",
-  },
+  // ...
 ];
 
-// Proficiencies data (icon and name)
+// Proficiencies (skills + icons)
 const proficiencies = [
   { name: "Golang", icon: <SiGoland /> },
   { name: "Adobe Photoshop", icon: <SiAdobephotoshop /> },
   { name: "Flask", icon: <SiFlask /> },
-  { name: "SQL", icon: <FaCertificate /> },
-  { name: "AWS", icon: <FaEnvelope /> }, // replaced icon for example
   { name: "JavaScript", icon: <SiJavascript /> },
-  { name: "Node", icon: <SiNodedotjs /> },
+  { name: "Node.js", icon: <SiNodedotjs /> },
   { name: "React", icon: <SiReact /> },
   { name: "Vite", icon: <SiVite /> },
-  { name: "HTML", icon: <FaEnvelope /> }, // replaced icon for example
-  { name: "CSS", icon: <FaEnvelope /> }, // replaced icon for example
-  { name: "C#", icon: <span className="font-bold text-lg text-gray-300">C#</span> },
   { name: "Python", icon: <SiPython /> },
   { name: "Firebase", icon: <SiFirebase /> },
   { name: "MongoDB", icon: <SiMongodb /> },
-  { name: "SSMS", icon: <span className="font-bold text-lg text-gray-400">SSMS</span> },
+  // ... add or remove as needed
 ];
 
-// Helper: Format date as DD/MM/YYYY
+// Helper to format date for the footer
 const getFormattedDate = () => {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -142,12 +115,12 @@ const getFormattedDate = () => {
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Particle engine initialization
+  // Initialize tsparticles
   const particlesInit = useCallback(async (engine) => {
     await loadFull(engine);
   }, []);
 
-  // Smooth scroll for navigation links
+  // Smooth scroll to sections
   const smoothScroll = (e, id) => {
     e.preventDefault();
     const section = document.querySelector(id);
@@ -155,46 +128,53 @@ export default function HomePage() {
     setMenuOpen(false);
   };
 
-  // Design variables for dark theme (grey, black, lead)
-  const containerBG = "bg-gradient-to-br from-gray-900 to-black";
-  const cardFrame = "border border-gray-700 shadow-xl rounded-lg bg-gray-800 text-gray-300";
-  const titleBar = "bg-gray-700 rounded-t-lg px-4 py-3 text-xl font-bold";
-  const contentPadding = "p-4 text-base";
-  const navHover = { scale: 1.05, transition: { duration: 0.3 } };
+  // Dark + accent color approach
+  // You can adjust these classes to refine the color palette or spacing.
+  const containerBG = "bg-gradient-to-br from-gray-900 to-gray-800";
+  const cardFrame = "border border-gray-700 shadow-xl rounded-lg bg-[#1c1c1e] text-gray-200";
+  const titleBar = "bg-[#2c2c2e] rounded-t-lg px-4 py-3 text-lg font-bold";
+  const contentPadding = "p-4 text-sm";
+  const accentColor = "#2F80ED"; // Example bright blue accent
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
-      {/* Particles Background */}
+    <div className="relative min-h-screen w-full overflow-hidden font-sans">
+      {/* Particle Background */}
       <Particles
         id="tsparticles"
         init={particlesInit}
         options={particlesOptions}
-        className="absolute top-0 left-0 w-full h-full"
+        className="absolute top-0 left-0 w-full h-full pointer-events-none"
       />
 
-      {/* Main content overlay */}
+      {/* Main overlay with gradient */}
       <div className={`relative z-10 ${containerBG} min-h-screen`}>
-        {/* Sticky Navbar */}
+        {/* NAVBAR */}
         <nav className="sticky top-0 z-50 bg-transparent backdrop-blur-md px-4 py-3">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <motion.div whileHover={navHover} className="text-2xl font-bold text-gray-300">
+            {/* Logo or Name */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="text-xl font-bold text-gray-200"
+            >
               HaziqRazak
             </motion.div>
             <button
-              className="text-gray-300 md:hidden focus:outline-none"
+              className="text-gray-200 md:hidden focus:outline-none"
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+              {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
             </button>
+
+            {/* Desktop Nav */}
             <div className="hidden md:flex space-x-4">
               {["about-me", "education", "experience", "projects", "proficiencies", "certifications"].map(
                 (id) => (
                   <motion.a
                     key={id}
-                    whileHover={navHover}
+                    whileHover={{ scale: 1.05 }}
                     href={`#${id}`}
                     onClick={(e) => smoothScroll(e, `#${id}`)}
-                    className="text-base text-gray-300 hover:text-gray-100 transition"
+                    className="text-sm text-gray-300 hover:text-gray-100 transition"
                   >
                     {id.replace("-", " ").toUpperCase()}
                   </motion.a>
@@ -202,16 +182,18 @@ export default function HomePage() {
               )}
             </div>
           </div>
+
+          {/* Mobile Nav */}
           {menuOpen && (
             <div className="md:hidden mt-2 space-y-2">
               {["about-me", "education", "experience", "projects", "proficiencies", "certifications"].map(
                 (id) => (
                   <motion.a
                     key={id}
-                    whileHover={navHover}
+                    whileHover={{ scale: 1.05 }}
                     href={`#${id}`}
                     onClick={(e) => smoothScroll(e, `#${id}`)}
-                    className="block text-base text-gray-300 hover:text-gray-100 transition"
+                    className="block text-sm text-gray-300 hover:text-gray-100 transition"
                   >
                     {id.replace("-", " ").toUpperCase()}
                   </motion.a>
@@ -221,27 +203,30 @@ export default function HomePage() {
           )}
         </nav>
 
-        {/* Bento-Style Grid */}
-        <div className="container mx-auto px-4 py-8">
+        {/* GRID LAYOUT */}
+        <div className="container mx-auto px-4 py-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* About Me Card */}
+            {/* ABOUT ME */}
             <motion.div
               id="about-me"
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+              whileHover={{ scale: 1.02 }}
               className={cardFrame}
             >
               <div className={titleBar}>ABOUT ME</div>
               <div className={contentPadding}>
+                {/* You could place a professional headshot here (e.g., <img src="/headshot.jpg" alt="Profile" />) */}
                 <h1 className="text-xl font-extrabold mb-2">Haziq Razak</h1>
-                <p className="mb-2">
-                  I'm a 19-year-old software engineer and web developer with expertise in cloud architecture and cloud computing based in Singapore.
+                <p className="mb-3">
+                  I’m a <span className="font-semibold">19-year-old software engineer</span> and <span className="font-semibold">web developer</span> with
+                  expertise in <span className="font-semibold">cloud architecture</span> and
+                  <span className="font-semibold"> cloud computing</span>. Based in Singapore, I create modern, interactive, and scalable solutions.
                 </p>
                 <p className="mb-3">
-                  Studying IT at Ngee Ann Polytechnic, I blend creativity with technology to design immersive experiences.
+                  Currently studying <span className="font-semibold">Information Technology at Ngee Ann Polytechnic</span>, I blend creativity with technology to design immersive experiences.
                 </p>
                 <div className="flex space-x-3 mb-3">
                   <motion.a whileHover={{ scale: 1.1 }} href="mailto:haziqrazak14.27@gmail.com" className="hover:opacity-80">
@@ -262,96 +247,110 @@ export default function HomePage() {
                   whileTap={{ scale: 0.95 }}
                   href="/resume.pdf"
                   download
-                  className="inline-flex items-center space-x-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 font-bold rounded transition"
+                  className="inline-flex items-center space-x-2 px-3 py-2 bg-[#2F80ED] hover:bg-opacity-90 text-white font-bold rounded-md transition"
                 >
-                  <FaDownload size={18} />
-                  <span className="text-sm">Download Resume</span>
+                  <FaDownload size={16} />
+                  <span>Download Resume</span>
                 </motion.a>
               </div>
             </motion.div>
 
-            {/* Education Card */}
+            {/* EDUCATION */}
             <motion.div
               id="education"
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+              whileHover={{ scale: 1.02 }}
               className={cardFrame}
             >
               <div className={titleBar}>EDUCATION</div>
               <div className={contentPadding}>
                 <div className="border-b border-gray-700 pb-2 mb-2">
-                  <h3 className="text-base font-semibold">Ngee Ann Polytechnic</h3>
-                  <p className="text-xs text-gray-400">2023-2026 | Information Technology</p>
-                  <p className="mt-1 text-xs">- Participated in ICT Society</p>
+                  <h3 className="text-sm font-semibold">Ngee Ann Polytechnic</h3>
+                  <p className="text-xs text-gray-400">2023–2026 | Information Technology</p>
+                  <ul className="list-disc list-inside mt-1 text-xs">
+                    <li>ICT Society Member</li>
+                    <li>Relevant Modules: Cloud Computing, Full-Stack Dev</li>
+                  </ul>
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold">Unity Secondary School</h3>
-                  <p className="text-xs text-gray-400">2019-2022 | O-levels</p>
+                  <h3 className="text-sm font-semibold">Unity Secondary School</h3>
+                  <p className="text-xs text-gray-400">2019–2022 | O-levels</p>
                   <ul className="list-disc list-inside mt-1 text-xs">
                     <li>Vice-President of Unique Media Productions</li>
-                    <li>OSOS Participation Award</li>
-                    <li>Winner of Photography Competition</li>
+                    <li>Winner of Intraschool Photography Competition</li>
                     <li>Student Role Model Award</li>
                   </ul>
                 </div>
               </div>
             </motion.div>
 
-            {/* Experience Card */}
+            {/* EXPERIENCE */}
             <motion.div
               id="experience"
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+              whileHover={{ scale: 1.02 }}
               className={cardFrame}
             >
               <div className={titleBar}>EXPERIENCE</div>
               <div className={contentPadding}>
                 <div className="border-b border-gray-700 pb-2 mb-2">
-                  <h3 className="text-base font-semibold">OCBC Ignite Internship</h3>
-                  <p className="text-xs text-gray-400">2025-2026 | Internship</p>
-                  <p className="mt-1 text-xs">Upcoming Internship at OCBC Ignite</p>
+                  <h3 className="text-sm font-semibold">OCBC Ignite Internship</h3>
+                  <p className="text-xs text-gray-400">2025–2026 | Internship</p>
+                  <ul className="list-disc list-inside mt-1 text-xs">
+                    <li>Upcoming: Focus on Cloud Deployment & Automation</li>
+                    <li>Goal: Improve DevOps pipeline efficiency</li>
+                  </ul>
                 </div>
                 <div className="border-b border-gray-700 pb-2 mb-2">
-                  <h3 className="text-base font-semibold">Photography Assistant</h3>
-                  <p className="text-xs text-gray-400">2021-2022 | Freelance</p>
-                  <p className="mt-1 text-xs">Photoshoots at Gardens by the Bay & Botanic Gardens</p>
+                  <h3 className="text-sm font-semibold">Photography Assistant</h3>
+                  <p className="text-xs text-gray-400">2021–2022 | Freelance</p>
+                  <ul className="list-disc list-inside mt-1 text-xs">
+                    <li>Assisted on shoots at Gardens by the Bay & Botanic Gardens</li>
+                    <li>Helped organize schedules and manage gear</li>
+                  </ul>
                 </div>
                 <div>
-                  <h3 className="text-base font-semibold">Bellman</h3>
-                  <p className="text-xs text-gray-400">2022-2024 | Part-Time</p>
-                  <p className="mt-1 text-xs">Worked at Marriott Tangs Plaza Hotel</p>
+                  <h3 className="text-sm font-semibold">Bellman</h3>
+                  <p className="text-xs text-gray-400">2022–2024 | Part-Time</p>
+                  <ul className="list-disc list-inside mt-1 text-xs">
+                    <li>Marriott Tangs Plaza Hotel, Singapore</li>
+                    <li>Developed customer service & teamwork skills</li>
+                  </ul>
                 </div>
               </div>
             </motion.div>
 
-            {/* Projects Card */}
+            {/* PROJECTS */}
             <motion.div
               id="projects"
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+              whileHover={{ scale: 1.02 }}
               className={cardFrame}
             >
               <div className={titleBar}>PROJECTS</div>
               <div className={contentPadding}>
                 <div className="border-b border-gray-700 pb-2 mb-2">
-                  <h3 className="text-base font-semibold">Personal Website</h3>
+                  <h3 className="text-sm font-semibold">Personal Website</h3>
                   <p className="text-xs text-gray-400">React, Next.js, Vite</p>
-                  <p className="mt-1 text-xs">My personal website</p>
+                  <ul className="list-disc list-inside mt-1 text-xs">
+                    <li>Designed modern, responsive UI</li>
+                    <li>Deployed on Vercel with CI/CD</li>
+                  </ul>
                   <div className="flex space-x-2 mt-2">
                     <a
                       href="https://github.com/Pofrzyzz/haziqrazak"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-1 text-gray-400 hover:underline text-xs"
+                      className="flex items-center space-x-1 text-xs text-gray-400 hover:underline"
                     >
                       <FaGithub />
                       <span>GitHub</span>
@@ -360,41 +359,47 @@ export default function HomePage() {
                       href="https://haziqrazak.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-1 text-gray-400 hover:underline text-xs"
+                      className="flex items-center space-x-1 text-xs text-gray-400 hover:underline"
                     >
                       <FaLink />
                       <span>Website</span>
                     </a>
                   </div>
                 </div>
+
                 <div className="border-b border-gray-700 pb-2 mb-2">
-                  <h3 className="text-base font-semibold">MyJams</h3>
+                  <h3 className="text-sm font-semibold">MyJams</h3>
                   <p className="text-xs text-gray-400">HTML, CSS, JS</p>
-                  <p className="mt-1 text-xs">A showcase for my playlists</p>
+                  <ul className="list-disc list-inside mt-1 text-xs">
+                    <li>Showcases personal playlists</li>
+                    <li>Experimented with front-end styling</li>
+                  </ul>
                   <div className="flex space-x-2 mt-2">
                     <a
                       href="https://pofrzyzz.github.io/MyJams/"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-1 text-gray-400 hover:underline text-xs"
+                      className="flex items-center space-x-1 text-xs text-gray-400 hover:underline"
                     >
                       <FaLink />
                       <span>Live Demo</span>
                     </a>
                   </div>
                 </div>
+
                 <div>
-                  <h3 className="text-base font-semibold">BattleShip Bot</h3>
+                  <h3 className="text-sm font-semibold">BattleShip Bot</h3>
                   <p className="text-xs text-gray-400">Python</p>
-                  <p className="mt-1 text-xs">
-                    A battleship game bot with Discord integration.
-                  </p>
+                  <ul className="list-disc list-inside mt-1 text-xs">
+                    <li>Developed a Discord-based battleship game</li>
+                    <li>Practiced Python OOP & API integration</li>
+                  </ul>
                   <div className="flex space-x-2 mt-2">
                     <a
                       href="https://github.com/Pofrzyzz/BattleShipGame"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center space-x-1 text-gray-400 hover:underline text-xs"
+                      className="flex items-center space-x-1 text-xs text-gray-400 hover:underline"
                     >
                       <FaGithub />
                       <span>GitHub</span>
@@ -404,21 +409,24 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            {/* Proficiencies Card */}
+            {/* PROFICIENCIES */}
             <motion.div
               id="proficiencies"
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+              whileHover={{ scale: 1.02 }}
               className={cardFrame}
             >
               <div className={titleBar}>PROFICIENCIES</div>
               <div className={contentPadding}>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                   {proficiencies.map((item, idx) => (
-                    <div key={idx} className="flex flex-col items-center p-2 border border-gray-700 rounded-sm text-xs">
+                    <div
+                      key={idx}
+                      className="flex flex-col items-center p-2 border border-gray-700 rounded text-xs hover:bg-[#2c2c2e] transition"
+                    >
                       <div className="mb-1 text-lg">{item.icon}</div>
                       <p className="text-center">{item.name}</p>
                     </div>
@@ -427,14 +435,14 @@ export default function HomePage() {
               </div>
             </motion.div>
 
-            {/* Certifications Card */}
+            {/* CERTIFICATIONS */}
             <motion.div
               id="certifications"
               variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}
+              whileHover={{ scale: 1.02 }}
               className={cardFrame}
             >
               <div className={titleBar}>CERTIFICATIONS</div>
@@ -446,13 +454,13 @@ export default function HomePage() {
                       href={cert.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="block border border-gray-700 p-2 rounded hover:bg-gray-700 transition text-xs"
+                      className="block border border-gray-700 p-2 rounded hover:bg-[#2c2c2e] transition text-xs"
                     >
                       <div className="flex items-center space-x-2">
-                        <FaCertificate className="text-gray-400" size={16} />
+                        <FaCertificate className="text-gray-400" size={14} />
                         <div>
                           <p className="font-semibold">{cert.name}</p>
-                          <p className="text-xs text-gray-500">{cert.date}</p>
+                          <p className="text-gray-500">{cert.date}</p>
                         </div>
                       </div>
                     </a>
@@ -463,9 +471,9 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Footer */}
-        <footer className="text-gray-500 py-2 text-center text-xs">
-          Last Updated: {getFormattedDate()} | Immersive Dark Bento-Style Portfolio
+        {/* FOOTER */}
+        <footer className="text-gray-500 py-3 text-center text-xs">
+          Last Updated: {getFormattedDate()} | Modern Dark Portfolio
         </footer>
       </div>
     </div>
