@@ -24,70 +24,88 @@ import {
   SiMongodb,
 } from "react-icons/si";
 
-/* =========================
-   1) Particle Configuration 
-   (Monochrome star field)
-========================= */
-const particlesOptions = {
-  background: { color: "#00000000" }, // transparent so the background image shows
-  fpsLimit: 60,
-  interactivity: {
-    events: {
-      onHover: { enable: true, mode: "repulse" },
-      resize: true,
-    },
-    modes: {
-      repulse: { distance: 100, duration: 0.4 },
-    },
-  },
-  particles: {
-    color: { value: "#dddddd" },
-    links: {
-      color: "#999999",
-      distance: 120,
-      enable: true,
-      opacity: 0.25,
-      width: 1,
-    },
-    move: {
-      enable: true,
-      speed: 1.2,
-      random: true,
-      outModes: { default: "bounce" },
-    },
-    number: {
-      density: { enable: true, area: 800 },
-      value: 80,
-    },
-    opacity: { value: 0.4 },
-    shape: { type: "circle" },
-    size: { value: { min: 1, max: 3 } },
-  },
-  detectRetina: true,
-};
+/* -------------------------------
+   1) Background Image & Particle Layers
+------------------------------- */
+// Background image layer (lowest z-index)
+const BackgroundImage = () => (
+  <div
+    className="absolute inset-0 -z-20"
+    style={{
+      backgroundImage: "url('/space-bg.jpg')",
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      opacity: 0.8,
+      mixBlendMode: "overlay", // creates a cross-dissolve overlay effect
+    }}
+  />
+);
 
-/* =========================
+// Star-like particles layer
+const StarParticles = ({ particlesInit }) => (
+  <Particles
+    id="tsparticles"
+    init={particlesInit}
+    options={{
+      background: { color: { value: "transparent" } },
+      fpsLimit: 60,
+      interactivity: {
+        events: {
+          onHover: { enable: true, mode: "repulse" },
+          resize: true,
+        },
+        modes: {
+          repulse: { distance: 100, duration: 0.4 },
+        },
+      },
+      particles: {
+        color: { value: "#dddddd" },
+        links: {
+          color: "#999999",
+          distance: 120,
+          enable: true,
+          opacity: 0.25,
+          width: 1,
+        },
+        move: {
+          enable: true,
+          speed: 1.2,
+          random: true,
+          outModes: { default: "bounce" },
+        },
+        number: { density: { enable: true, area: 800 }, value: 80 },
+        opacity: { value: 0.4 },
+        shape: { type: "circle" },
+        size: { value: { min: 1, max: 3 } },
+      },
+      detectRetina: true,
+    }}
+    className="absolute top-0 left-0 w-full h-full -z-10"
+  />
+);
+
+/* -------------------------------
    2) Data for 5 Boxes (Right Column)
-========================= */
+------------------------------- */
 const boxesData = [
   {
     id: "education",
     title: "Education",
     content: (
       <>
-        <h3 className="text-xl font-bold mb-2">Education</h3>
+        <h3 className="text-2xl font-bold mb-2">Education</h3>
         <div className="mb-3">
-          <h4 className="font-semibold text-base">Ngee Ann Polytechnic</h4>
-          <p className="text-sm text-gray-300">2023–2026 | IT</p>
-          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+          <h4 className="font-semibold text-xl">Ngee Ann Polytechnic</h4>
+          <p className="text-lg text-gray-300">2023–2026 | IT</p>
+          <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Member, ICT Society</li>
             <li>Focus on Cloud & Full-Stack Dev</li>
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold text-base">Unity Secondary School</h4>
-          <p className="text-sm text-gray-300">2019–2022 | O-levels</p>
-          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+          <h4 className="font-semibold text-xl">Unity Secondary School</h4>
+          <p className="text-lg text-gray-300">2019–2022 | O-levels</p>
+          <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Vice-President, Unique Media Productions</li>
             <li>Student Role Model Award</li>
             <li>Winner, Photography Competition</li>
@@ -101,27 +119,27 @@ const boxesData = [
     title: "Experience",
     content: (
       <>
-        <h3 className="text-xl font-bold mb-2">Experience</h3>
+        <h3 className="text-2xl font-bold mb-2">Experience</h3>
         <div className="mb-3">
-          <h4 className="font-semibold text-base">OCBC Ignite Internship</h4>
-          <p className="text-sm text-gray-300">2025–2026 | Internship</p>
-          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+          <h4 className="font-semibold text-xl">OCBC Ignite Internship</h4>
+          <p className="text-lg text-gray-300">2025–2026 | Internship</p>
+          <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Optimized cloud deployments & automated CI/CD</li>
             <li>Reduced release cycle times by 20%</li>
           </ul>
         </div>
         <div className="mb-3">
-          <h4 className="font-semibold text-base">Photography Assistant</h4>
-          <p className="text-sm text-gray-300">2021–2022 | Freelance</p>
-          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+          <h4 className="font-semibold text-xl">Photography Assistant</h4>
+          <p className="text-lg text-gray-300">2021–2022 | Freelance</p>
+          <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Scheduled & organized professional shoots</li>
             <li>Improved team workflow by 10%</li>
           </ul>
         </div>
         <div>
-          <h4 className="font-semibold text-base">Bellman, Marriott Tangs Plaza</h4>
-          <p className="text-sm text-gray-300">2022–2024 | Part-Time</p>
-          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+          <h4 className="font-semibold text-xl">Bellman, Marriott Tangs Plaza</h4>
+          <p className="text-lg text-gray-300">2022–2024 | Part-Time</p>
+          <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Enhanced customer service & communication skills</li>
             <li>Positive guest feedback recognition</li>
           </ul>
@@ -134,20 +152,20 @@ const boxesData = [
     title: "Projects",
     content: (
       <>
-        <h3 className="text-xl font-bold mb-2">Projects</h3>
+        <h3 className="text-2xl font-bold mb-2">Projects</h3>
         <div className="mb-3">
-          <h4 className="font-semibold text-base">Personal Website</h4>
-          <p className="text-sm text-gray-300">React, Next.js, Vite</p>
-          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+          <h4 className="font-semibold text-xl">Personal Website</h4>
+          <p className="text-lg text-gray-300">React, Next.js, Vite</p>
+          <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Modern UI & CI/CD pipeline on Vercel</li>
             <li>Over 1,000 site visits in first month</li>
           </ul>
-          <div className="flex space-x-2 mt-2">
+          <div className="flex space-x-3 mt-2">
             <a
               href="https://github.com/Pofrzyzz/haziqrazak"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
+              className="flex items-center space-x-1 text-lg text-gray-300 hover:underline"
             >
               <FaGithub />
               <span>GitHub</span>
@@ -156,7 +174,7 @@ const boxesData = [
               href="https://haziqrazak.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
+              className="flex items-center space-x-1 text-lg text-gray-300 hover:underline"
             >
               <FaExternalLinkAlt />
               <span>Website</span>
@@ -164,18 +182,18 @@ const boxesData = [
           </div>
         </div>
         <div className="mb-3">
-          <h4 className="font-semibold text-base">MyJams</h4>
-          <p className="text-sm text-gray-300">HTML, CSS, JS</p>
-          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+          <h4 className="font-semibold text-xl">MyJams</h4>
+          <p className="text-lg text-gray-300">HTML, CSS, JS</p>
+          <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Showcases personal playlists</li>
             <li>Experimented with custom audio player</li>
           </ul>
-          <div className="flex space-x-2 mt-2">
+          <div className="flex space-x-3 mt-2">
             <a
               href="https://pofrzyzz.github.io/MyJams/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
+              className="flex items-center space-x-1 text-lg text-gray-300 hover:underline"
             >
               <FaExternalLinkAlt />
               <span>Live Demo</span>
@@ -183,18 +201,18 @@ const boxesData = [
           </div>
         </div>
         <div>
-          <h4 className="font-semibold text-base">BattleShip Bot</h4>
-          <p className="text-sm text-gray-300">Python</p>
-          <ul className="list-disc list-inside mt-1 text-sm space-y-1">
+          <h4 className="font-semibold text-xl">BattleShip Bot</h4>
+          <p className="text-lg text-gray-300">Python</p>
+          <ul className="list-disc list-inside mt-1 text-lg space-y-1">
             <li>Discord-based game with OOP approach</li>
             <li>Learned containerization basics</li>
           </ul>
-          <div className="flex space-x-2 mt-2">
+          <div className="flex space-x-3 mt-2">
             <a
               href="https://github.com/Pofrzyzz/BattleShipGame"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
+              className="flex items-center space-x-1 text-lg text-gray-300 hover:underline"
             >
               <FaGithub />
               <span>GitHub</span>
@@ -209,8 +227,8 @@ const boxesData = [
     title: "Proficiencies",
     content: (
       <>
-        <h3 className="text-xl font-bold mb-2">Proficiencies</h3>
-        <ul className="list-disc list-inside text-sm space-y-1 text-gray-300">
+        <h3 className="text-2xl font-bold mb-2">Proficiencies</h3>
+        <ul className="list-disc list-inside text-lg space-y-1 text-gray-300">
           <li>Golang</li>
           <li>Adobe Photoshop</li>
           <li>Flask</li>
@@ -236,8 +254,8 @@ const boxesData = [
     title: "Certifications",
     content: (
       <>
-        <h3 className="text-xl font-bold mb-2">Certifications</h3>
-        <ul className="list-disc list-inside text-sm space-y-1 text-gray-300">
+        <h3 className="text-2xl font-bold mb-2">Certifications</h3>
+        <ul className="list-disc list-inside text-lg space-y-1 text-gray-300">
           <li>
             <a
               href="https://www.credly.com/badges/19628356-d1c2-4f2f-9383-4c0139acc829/linked_in_profile"
@@ -310,9 +328,9 @@ const boxesData = [
   },
 ];
 
-/* =========================
+/* -------------------------------
    3) Animation Variants
-========================= */
+------------------------------- */
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: {
@@ -323,18 +341,29 @@ const cardVariants = {
   },
 };
 
-/* Global tilt effect for the grid and modal */
-const computeGlobalTilt = (e) => {
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-  const rotateX = (centerY - e.clientY) / 50;
-  const rotateY = (e.clientX - centerX) / 50;
-  return { transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` };
+/* Pop-up variants: apply a transform based on cursor position */
+const popupVariants = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: (cursorPos) => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const rotateX = (centerY - cursorPos.clientY) / 30;
+    const rotateY = (cursorPos.clientX - centerX) / 30;
+    return {
+      opacity: 1,
+      scale: 1,
+      x: cursorPos.x,
+      y: cursorPos.y,
+      rotateX,
+      rotateY,
+      transition: { duration: 0.4 },
+    };
+  },
 };
 
-/* =========================
+/* -------------------------------
    4) Footer Date Helper
-========================= */
+------------------------------- */
 function getFormattedDate() {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -342,11 +371,11 @@ function getFormattedDate() {
   ).padStart(2, "0")}/${today.getFullYear()}`;
 }
 
-/* =========================
+/* -------------------------------
    5) Main Component
-========================= */
+------------------------------- */
 export default function HomePage() {
-  const [selectedBox, setSelectedBox] = useState(null); // which box is open (id)
+  const [selectedBox, setSelectedBox] = useState(null); // which box is open
   const [cursorPos, setCursorPos] = useState({
     x: 0,
     y: 0,
@@ -359,9 +388,13 @@ export default function HomePage() {
     await loadFull(engine);
   }, []);
 
-  // Global tilt effect handler for entire grid and modal
+  // Global tilt effect for the grid and modal based on cursor position
   const handleGlobalMouseMove = (e) => {
-    setGlobalTilt(computeGlobalTilt(e));
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const rotateX = (centerY - e.clientY) / 50;
+    const rotateY = (e.clientX - centerX) / 50;
+    setGlobalTilt({ transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` });
   };
 
   // When a right-side box is clicked, compute pop-up position based on cursor
@@ -380,13 +413,23 @@ export default function HomePage() {
     <div
       className="flex flex-col min-h-screen text-gray-100 font-sans overflow-hidden"
       style={{
-        backgroundImage: "url('/space-bg.jpg')", // Your space-themed image in public folder
+        // Background image layer with a slight cross-dissolve overlay effect
+        backgroundImage: "url('/space-bg.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
       onMouseMove={handleGlobalMouseMove}
     >
+      {/* Background Image Layer */}
+      <div
+        className="absolute inset-0 -z-20"
+        style={{
+          opacity: 0.7,
+          mixBlendMode: "overlay",
+        }}
+      />
+
       {/* Star-like Particles */}
       <Particles
         id="tsparticles"
@@ -395,33 +438,32 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Top Bar with "HaziqRazak" (moved a bit to the right) */}
-      <div className="bg-black bg-opacity-60 backdrop-blur-sm px-6 py-3 z-20">
+      {/* Top Bar with "HaziqRazak" (shifted to the right) */}
+      <div className="bg-black bg-opacity-60 backdrop-blur-sm px-8 py-3 z-20">
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">HaziqRazak</h1>
       </div>
 
-      {/* Main Layout: Global tilt applied */}
+      {/* Main Content: Grid is centered vertically and horizontally */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-4" style={globalTilt}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
-          {/* LEFT COLUMN: About Me with global tilt */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-screen-xl">
+          {/* LEFT COLUMN: About Me (bigger, full height) */}
           <motion.div
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
-            className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-600 p-8"
+            className="bg-black bg-opacity-70 rounded-lg shadow-xl border border-gray-600 p-10"
           >
-            <h2 className="text-2xl md:text-3xl font-bold mb-4">About Me</h2>
-            <p className="text-base md:text-lg mb-4 leading-relaxed">
-              I’m a <strong>19-year-old</strong> student from{" "}
-              <strong>Singapore</strong>. I study Information Technology at Ngee Ann Polytechnic.
+            <h2 className="text-3xl font-bold mb-6">About Me</h2>
+            <p className="text-xl mb-6 leading-relaxed">
+              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong> studying Information Technology at Ngee Ann Polytechnic.
             </p>
-            <div className="flex space-x-4 mb-4">
+            <div className="flex space-x-6 mb-6">
               <motion.a
                 whileHover={{ scale: 1.1 }}
                 href="mailto:haziqrazak14.27@gmail.com"
                 className="hover:text-gray-300"
               >
-                <FaEnvelope size={24} />
+                <FaEnvelope size={28} />
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.1 }}
@@ -430,7 +472,7 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="hover:text-gray-300"
               >
-                <FaGithub size={24} />
+                <FaGithub size={28} />
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.1 }}
@@ -439,7 +481,7 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="hover:text-gray-300"
               >
-                <FaLinkedin size={24} />
+                <FaLinkedin size={28} />
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.1 }}
@@ -448,7 +490,7 @@ export default function HomePage() {
                 rel="noopener noreferrer"
                 className="hover:text-gray-300"
               >
-                <FaInstagram size={24} />
+                <FaInstagram size={28} />
               </motion.a>
             </div>
             <motion.a
@@ -456,15 +498,15 @@ export default function HomePage() {
               whileTap={{ scale: 0.95 }}
               href="/resume.pdf"
               download
-              className="inline-flex items-center space-x-2 px-5 py-2 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-md transition"
+              className="inline-flex items-center space-x-3 px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white font-semibold rounded-md transition text-xl"
             >
-              <FaDownload size={18} />
+              <FaDownload size={22} />
               <span>Download Resume</span>
             </motion.a>
           </motion.div>
 
           {/* RIGHT COLUMN: 5 Boxes */}
-          <div className="grid grid-rows-5 gap-4">
+          <div className="grid grid-rows-5 gap-6">
             {boxesData.map((box) => (
               <motion.div
                 key={box.id}
@@ -473,10 +515,10 @@ export default function HomePage() {
                 whileInView="visible"
                 whileHover={{ scale: 1.02 }}
                 onClick={(e) => handleBoxClick(box.id, e)}
-                className="bg-black bg-opacity-70 rounded-lg shadow-md border border-gray-600 p-5 cursor-pointer hover:bg-opacity-80 transition"
+                className="bg-black bg-opacity-70 rounded-lg shadow-xl border border-gray-600 p-8 cursor-pointer hover:bg-opacity-80 transition"
               >
-                <h2 className="text-xl font-bold mb-1">{box.title}</h2>
-                <p className="text-sm text-gray-300">Click to see more...</p>
+                <h2 className="text-2xl font-bold mb-2">{box.title}</h2>
+                <p className="text-lg text-gray-300">Click to see more...</p>
               </motion.div>
             ))}
           </div>
@@ -498,11 +540,8 @@ export default function HomePage() {
               key="popup"
               onMouseMove={handleGlobalMouseMove}
               style={globalTilt}
-              className="bg-[#1a1a1a] bg-opacity-80 text-gray-100 max-w-lg w-full p-8 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { duration: 0.4 } },
-              }}
+              className="bg-[#1a1a1a] bg-opacity-80 text-gray-100 max-w-4xl w-full p-10 rounded-lg shadow-2xl border border-gray-700 relative cursor-auto"
+              variants={popupVariants}
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0, scale: 0.8 }}
@@ -514,9 +553,9 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      {/* Footer */}
-      <footer className="mt-auto text-center text-gray-300 py-2 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | HaziqRazak © {new Date().getFullYear()}
+      {/* FOOTER (pushed to bottom) */}
+      <footer className="text-center text-gray-300 py-3 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
+        Last Updated: {getFormattedDate()} | Monochrome Space Theme with Global 3D Transform
       </footer>
     </div>
   );
