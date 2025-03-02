@@ -2,11 +2,37 @@ import React, { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import { FaEnvelope, FaGithub, FaLinkedin, FaInstagram, FaDownload } from "react-icons/fa";
+import {
+  FaEnvelope,
+  FaGithub,
+  FaLinkedin,
+  FaInstagram,
+  FaDownload,
+  FaCertificate,
+  FaAws,
+  FaHtml5,
+  FaCss3,
+  FaExternalLinkAlt,
+} from "react-icons/fa";
+import {
+  SiGoland,
+  SiAdobephotoshop,
+  SiFlask,
+  SiJavascript,
+  SiNodedotjs,
+  SiReact,
+  SiVite,
+  SiPython,
+  SiFirebase,
+  SiMongodb,
+} from "react-icons/si";
 
-/* 1) Star-like particles config (increased count, bright color) */
+/* ===============================
+   1) Particle Configuration 
+   (monochrome star field)
+=============================== */
 const particlesOptions = {
-  background: { color: "#00000000" }, // transparent to show background image
+  background: { color: "#00000000" }, // transparent to reveal the image
   fpsLimit: 60,
   interactivity: {
     events: {
@@ -14,13 +40,13 @@ const particlesOptions = {
       resize: true,
     },
     modes: {
-      repulse: { distance: 120, duration: 0.4 },
+      repulse: { distance: 100, duration: 0.4 },
     },
   },
   particles: {
     color: { value: "#dddddd" },
     links: {
-      color: "#aaaaaa",
+      color: "#999999",
       distance: 120,
       enable: true,
       opacity: 0.25,
@@ -34,7 +60,7 @@ const particlesOptions = {
     },
     number: {
       density: { enable: true, area: 800 },
-      value: 80, // increased count
+      value: 80,
     },
     opacity: { value: 0.4 },
     shape: { type: "circle" },
@@ -43,7 +69,10 @@ const particlesOptions = {
   detectRetina: true,
 };
 
-/* 2) The five boxes on the right side (title + content). */
+/* ===============================
+   2) Data for Pop-up Boxes
+   (The 5 boxes on the right)
+=============================== */
 const boxesData = [
   {
     id: "education",
@@ -117,6 +146,26 @@ const boxesData = [
             <li>Modern UI & CI/CD pipeline on Vercel</li>
             <li>Over 1,000 site visits in first month</li>
           </ul>
+          <div className="flex space-x-2 mt-2">
+            <a
+              href="https://github.com/Pofrzyzz/haziqrazak"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
+            >
+              <FaGithub />
+              <span>GitHub</span>
+            </a>
+            <a
+              href="https://haziqrazak.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
+            >
+              <FaExternalLinkAlt />
+              <span>Website</span>
+            </a>
+          </div>
         </div>
         <div className="mb-3">
           <h4 className="font-semibold text-base">MyJams</h4>
@@ -125,6 +174,17 @@ const boxesData = [
             <li>Showcases personal playlists</li>
             <li>Experimented with custom audio player</li>
           </ul>
+          <div className="flex space-x-2 mt-2">
+            <a
+              href="https://pofrzyzz.github.io/MyJams/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
+            >
+              <FaExternalLinkAlt />
+              <span>Live Demo</span>
+            </a>
+          </div>
         </div>
         <div>
           <h4 className="font-semibold text-base">BattleShip Bot</h4>
@@ -133,6 +193,17 @@ const boxesData = [
             <li>Discord-based game with OOP approach</li>
             <li>Learned containerization basics</li>
           </ul>
+          <div className="flex space-x-2 mt-2">
+            <a
+              href="https://github.com/Pofrzyzz/BattleShipGame"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center space-x-1 text-sm text-gray-300 hover:underline"
+            >
+              <FaGithub />
+              <span>GitHub</span>
+            </a>
+          </div>
         </div>
       </>
     ),
@@ -158,22 +229,70 @@ const boxesData = [
         <h3 className="text-xl font-bold mb-2">Certifications</h3>
         <ul className="space-y-2 text-sm text-gray-300">
           <li>
-            <strong>Professional Scrum Master™ I (PSM I)</strong> ‑ May 2024
+            <a
+              href="https://www.credly.com/badges/19628356-d1c2-4f2f-9383-4c0139acc829/linked_in_profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              Professional Scrum Master™ I (PSM I)
+            </a>{" "}
+            ‑ May 2024
           </li>
           <li>
-            <strong>Go (Basic)</strong> ‑ HackerRank
+            <a
+              href="https://www.hackerrank.com/certificates/9b49f85d5336"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              Go (Basic)
+            </a>{" "}
+            ‑ HackerRank
           </li>
           <li>
-            <strong>SQL (Basic)</strong> ‑ HackerRank
+            <a
+              href="https://www.hackerrank.com/certificates/iframe/f1e17d3784cf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              SQL (Basic)
+            </a>{" "}
+            ‑ HackerRank
           </li>
           <li>
-            <strong>SQL (Intermediate)</strong> ‑ HackerRank
+            <a
+              href="https://www.hackerrank.com/certificates/iframe/b6787b9fb5a0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              SQL (Intermediate)
+            </a>{" "}
+            ‑ HackerRank
           </li>
           <li>
-            <strong>Python (Basic)</strong> ‑ HackerRank
+            <a
+              href="https://www.hackerrank.com/certificates/508683d4132a"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              Python (Basic)
+            </a>{" "}
+            ‑ HackerRank
           </li>
           <li>
-            <strong>C# (Basic)</strong> ‑ HackerRank
+            <a
+              href="https://www.hackerrank.com/certificates/f856ffdf6442"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:underline"
+            >
+              C# (Basic)
+            </a>{" "}
+            ‑ HackerRank
           </li>
         </ul>
       </>
@@ -181,7 +300,9 @@ const boxesData = [
   },
 ];
 
-/* 3) Card & popup animation variants */
+/* ===============================
+   3) Animation Variants
+=============================== */
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: {
@@ -192,11 +313,10 @@ const cardVariants = {
   },
 };
 
-/* For the 3D transform near the cursor, we compute rotateX/rotateY from the cursor. */
+/* The pop-up variants use a custom function that computes rotateX and rotateY based on cursor position */
 const popupVariants = {
   hidden: { opacity: 0, scale: 0.8 },
   visible: (cursorPos) => {
-    // Example 3D tilt based on screen center
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
     const rotateX = (centerY - cursorPos.clientY) / 30;
@@ -204,7 +324,6 @@ const popupVariants = {
     return {
       opacity: 1,
       scale: 1,
-      // position the box near the clicked area
       x: cursorPos.x,
       y: cursorPos.y,
       rotateX,
@@ -214,7 +333,9 @@ const popupVariants = {
   },
 };
 
-/* 4) Helper: date for footer */
+/* ===============================
+   4) Footer Date Helper
+=============================== */
 function getFormattedDate() {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -222,6 +343,9 @@ function getFormattedDate() {
   ).padStart(2, "0")}/${today.getFullYear()}`;
 }
 
+/* ===============================
+   5) Main Component
+=============================== */
 export default function HomePage() {
   const [selectedBox, setSelectedBox] = useState(null); // which box is open
   const [cursorPos, setCursorPos] = useState({
@@ -231,18 +355,15 @@ export default function HomePage() {
     clientY: 0,
   });
 
-  // For star-like particles
   const particlesInit = useCallback(async (engine) => {
     await loadFull(engine);
   }, []);
 
-  // When user clicks a box => store location
+  // When a box is clicked, compute the pop-up position based on cursor
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    // e.clientX, e.clientY => mouse coords relative to viewport
-    // We offset the pop-up slightly
     setCursorPos({
-      x: e.clientX - rect.left - 100,
+      x: e.clientX - rect.left - 100, // adjust as needed
       y: e.clientY - rect.top - 100,
       clientX: e.clientX,
       clientY: e.clientY,
@@ -252,15 +373,15 @@ export default function HomePage() {
 
   return (
     <div
-      className="flex flex-col min-h-screen text-gray-100"
+      className="relative min-h-screen w-full text-gray-100 font-sans overflow-hidden"
       style={{
-        backgroundImage: "url('/space-bg.jpg')", // your space-themed image in /public
+        backgroundImage: "url('/space-bg.jpg')", // Your space-themed image in public folder
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Star-like Particles */}
+      {/* Star Particles */}
       <Particles
         id="tsparticles"
         init={particlesInit}
@@ -268,7 +389,7 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Top "HaziqRazak" bar */}
+      {/* Top Bar with "HaziqRazak" */}
       <div className="bg-black bg-opacity-60 backdrop-blur-sm px-4 py-3 z-20">
         <motion.h1
           whileHover={{ scale: 1.05 }}
@@ -278,31 +399,29 @@ export default function HomePage() {
         </motion.h1>
       </div>
 
-      {/* Main content => center vertically & horizontally */}
+      {/* Main Layout: Left column is About Me, Right column is 5 boxes */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-4">
-        {/* 2 columns => left = About Me (bigger), right = 5 boxes (stacked) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
-          {/* LEFT => ABOUT ME */}
+          {/* LEFT: About Me (bigger) */}
           <motion.div
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-700 p-8"
+            className="bg-black bg-opacity-70 rounded-lg shadow-lg border border-gray-600 p-8"
           >
             <h2 className="text-2xl md:text-3xl font-bold mb-4">About Me</h2>
             <p className="text-base md:text-lg mb-3 leading-relaxed">
               I’m a <strong>19-year-old software engineer</strong> and{" "}
               <strong>web developer</strong> based in <strong>Singapore</strong>,
               specializing in <strong>cloud architecture</strong> and{" "}
-              <strong>cloud computing</strong>. I love creating modern,
-              interactive experiences that scale globally.
+              <strong>cloud computing</strong>. I love creating modern, interactive
+              experiences that scale globally.
             </p>
             <p className="text-base md:text-lg mb-4 leading-relaxed">
               Currently studying <strong>Information Technology</strong> at Ngee
               Ann Polytechnic, I’ve worked on multiple full-stack applications,
-              leading to a <strong>20% improvement</strong> in deployment
-              efficiency through cloud automation.
+              leading to a <strong>20% improvement</strong> in deployment efficiency
+              through cloud automation.
             </p>
             <div className="flex space-x-4 mb-4">
               <motion.a
@@ -352,7 +471,7 @@ export default function HomePage() {
             </motion.a>
           </motion.div>
 
-          {/* RIGHT => 5 boxes in a vertical stack */}
+          {/* RIGHT: 5 Boxes */}
           <div className="grid grid-rows-5 gap-4">
             {boxesData.map((box) => (
               <motion.div
@@ -360,10 +479,9 @@ export default function HomePage() {
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true }}
                 whileHover={{ scale: 1.02 }}
                 onClick={(e) => handleBoxClick(box.id, e)}
-                className="bg-black bg-opacity-70 rounded-lg shadow-md border border-gray-700 p-5 cursor-pointer hover:bg-opacity-80 transition"
+                className="bg-black bg-opacity-70 rounded-lg shadow-md border border-gray-600 p-5 cursor-pointer hover:bg-opacity-80 transition"
               >
                 <h2 className="text-xl font-bold mb-1">{box.title}</h2>
                 <p className="text-sm text-gray-300">Click to see more...</p>
@@ -373,7 +491,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* POP-UP => 3D transform near cursor */}
+      {/* POP-UP OVERLAY with 3D transform based on cursor */}
       <AnimatePresence>
         {selectedBox && (
           <motion.div
@@ -402,7 +520,7 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="text-center text-gray-300 py-2 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | Centered Layout + 3D Pop-Ups
+        Last Updated: {getFormattedDate()} | Monochrome Space Theme with 3D Pop-Ups
       </footer>
     </div>
   );
