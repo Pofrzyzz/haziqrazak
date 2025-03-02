@@ -27,7 +27,7 @@ import {
 /* ------------------------------
    1) Particle Configuration 
    (Monochrome star field)
-------------------------------- */
+------------------------------ */
 const particlesOptions = {
   background: { color: { value: "#00000000" } }, // Transparent to show background image
   fpsLimit: 60,
@@ -36,9 +36,7 @@ const particlesOptions = {
       onHover: { enable: true, mode: "repulse" },
       resize: true,
     },
-    modes: {
-      repulse: { distance: 100, duration: 0.4 },
-    },
+    modes: { repulse: { distance: 100, duration: 0.4 } },
   },
   particles: {
     color: { value: "#dddddd" },
@@ -65,7 +63,7 @@ const particlesOptions = {
 
 /* ------------------------------
    2) Data for Right-Side Boxes
-------------------------------- */
+------------------------------ */
 const boxesData = [
   {
     id: "education",
@@ -366,7 +364,7 @@ export default function HomePage() {
     await loadFull(engine);
   }, []);
 
-  // Global tilt effect for grid and modal based on mouse position
+  // Global tilt effect: update based on mouse position
   const handleGlobalMouseMove = (e) => {
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
@@ -377,7 +375,7 @@ export default function HomePage() {
     });
   };
 
-  // When a right-side box is clicked, compute pop-up position based on cursor
+  // Compute modal pop-up position on box click
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setCursorPos({
@@ -411,12 +409,12 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Top Bar with "HaziqRazak" (shifted right) */}
+      {/* Top Bar with "HaziqRazak", shifted right */}
       <div className="bg-black bg-opacity-60 backdrop-blur-sm px-8 py-3 z-20">
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">HaziqRazak</h1>
       </div>
 
-      {/* Main Layout: Centered grid (smaller grid now) with global tilt */}
+      {/* Main Layout: Centered grid (smaller grid) with global tilt */}
       <div className="flex-1 flex items-center justify-center relative z-10 px-4" style={globalTilt}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
           {/* LEFT COLUMN: About Me (larger) */}
@@ -426,12 +424,11 @@ export default function HomePage() {
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
-            className="bg-black bg-opacity-70 rounded-lg shadow-2xl border border-gray-600 p-10"
+            className="bg-black bg-opacity-70 rounded-lg shadow-2xl border border-gray-600 p-8"
           >
             <h2 className="text-3xl font-bold mb-6">About Me</h2>
             <p className="text-xl mb-6 leading-relaxed">
-              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>.
-              I study Information Technology at Ngee Ann Polytechnic.
+              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>. I study Information Technology at Ngee Ann Polytechnic.
             </p>
             <div className="flex space-x-6 mb-6">
               <motion.a
@@ -489,9 +486,9 @@ export default function HomePage() {
                 variants={cardVariants}
                 initial="hidden"
                 whileInView="visible"
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.05, rotateZ: 2, boxShadow: "0px 8px 20px rgba(0,0,0,0.8)" }}
                 onClick={(e) => handleBoxClick(box.id, e)}
-                className="bg-black bg-opacity-70 rounded-lg shadow-2xl border border-gray-600 p-10 cursor-pointer hover:bg-opacity-80 transition"
+                className="bg-black bg-opacity-70 rounded-lg shadow-2xl border border-gray-600 p-8 cursor-pointer hover:bg-opacity-80 transition"
               >
                 <h2 className="text-2xl font-bold mb-2">{box.title}</h2>
                 <p className="text-lg text-gray-300">Click to see more...</p>
@@ -532,7 +529,7 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="text-center text-gray-300 py-3 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | Haziq Razak's Portfolio
+        Last Updated: {getFormattedDate()} | Monochrome Space Theme with Global 3D Transform
       </footer>
     </div>
   );
