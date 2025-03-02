@@ -2,33 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Windows XP vibe custom animations or classes */
-
-@keyframes scrollXP {
-  0% {
-    transform: translateX(-100%);
+/* Simple modern fade-in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  100% {
-    transform: translateX(100%);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.animate-scrollXP {
-  animation: scrollXP 8s linear infinite;
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
 }
 
 body {
   cursor: default;
+  background-color: #1f2937;
 }
 
-a, button {
+a,
+button {
   cursor: pointer;
 }
 
-input, textarea {
+input,
+textarea {
   cursor: text;
-}
-
-.disabled {
-  cursor: not-allowed;
 }

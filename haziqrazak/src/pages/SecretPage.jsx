@@ -1,15 +1,8 @@
-// src/pages/SecretPage.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import { db } from "../firebaseConfig";
-import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy,
-} from "firebase/firestore";
+import { collection, addDoc, getDocs, query, orderBy } from "firebase/firestore";
 import {
   FaPlay,
   FaPause,
@@ -19,11 +12,6 @@ import {
   FaCompactDisc,
 } from "react-icons/fa";
 
-/*
-  Audio files in /public/playlist/
-  - Heaven ~ The Walkmen first
-  - Volume=0.02 for initial
-*/
 const songs = [
   { title: "Heaven ~ The Walkmen", file: "/playlist/heaven.mp3" },
   { title: "Adventure of a Lifetime ~ Coldplay", file: "/playlist/adventureofalifetime.mp3" },
@@ -34,18 +22,13 @@ const songs = [
 
 export default function SecretPage() {
   const [user, setUser] = useState(null);
-
-  // Music player states
   const [currentSongIndex, setCurrentSongIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [audio, setAudio] = useState(null);
-  const [volume, setVolume] = useState(0.02); // Start at 2% volume
-
-  // Guestbook (forum) states
+  const [volume, setVolume] = useState(0.5);
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState("");
 
-  // 1) Anonymous Auth
   useEffect(() => {
     const auth = getAuth();
     signInAnonymously(auth).catch(console.error);
@@ -54,7 +37,6 @@ export default function SecretPage() {
     });
   }, []);
 
-  // 2) Fetch forum posts (newest first)
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -72,32 +54,26 @@ export default function SecretPage() {
     fetchPosts();
   }, []);
 
-  // 3) Create/update audio when track changes
   useEffect(() => {
     if (audio) audio.pause();
     const newAudio = new Audio(songs[currentSongIndex].file);
-    newAudio.volume = 0.02;
+    newAudio.volume = volume;
     setAudio(newAudio);
-
     if (isPlaying) {
       newAudio.play().catch((err) => console.warn("Auto-play blocked:", err));
     }
-
     return () => {
       newAudio.pause();
       newAudio.src = "";
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSongIndex]);
 
-  // 4) Keep volume in sync
   useEffect(() => {
     if (audio) {
       audio.volume = volume;
     }
   }, [volume, audio]);
 
-  // 5) Music controls
   const handlePlayPause = () => {
     if (!audio) return;
     if (isPlaying) {
@@ -116,22 +92,18 @@ export default function SecretPage() {
 
   const handlePrev = () => {
     if (audio) audio.pause();
-    setCurrentSongIndex((prev) =>
-      prev === 0 ? songs.length - 1 : prev - 1
-    );
+    setCurrentSongIndex((prev) => (prev === 0 ? songs.length - 1 : prev - 1));
     setIsPlaying(true);
   };
 
-  // 6) Add new post
   const handleAddPost = async () => {
-    if (!newPost.trim()) return; // skip empty
+    if (!newPost.trim()) return;
     try {
       await addDoc(collection(db, "forumPosts"), {
         text: newPost,
         userId: user?.uid || "anonymous",
         createdAt: Date.now(),
       });
-      // Insert at top of local array
       setPosts((prev) => [{ id: Date.now(), text: newPost }, ...prev]);
       setNewPost("");
     } catch (err) {
@@ -139,45 +111,38 @@ export default function SecretPage() {
     }
   };
 
+  // Modern design variables
+  const containerBG = "bg-gradient-to-br from-gray-800 to-blue-900";
+  const cardFrame = "border border-blue-700 shadow-lg rounded-lg";
+  const headerBG = "bg-blue-800";
+  const headerText = "text-gray-100";
+  const bodyBG = "bg-gray-900";
+  const bodyText = "text-gray-100";
+
   return (
-    <div
-      className="min-h-screen bg-cover bg-center text-black font-['MS_Sans_Serif','Tahoma','Geneva','sans-serif']"
-      style={{ backgroundImage: "url('/bliss.jpg')" }} // place bliss.jpg in /public
-    >
-      <div className="flex flex-col md:flex-row h-full">
-        {/* LEFT COLUMN => Retro Player + Welcome (XP style, no rounding) */}
-        <div className="md:w-1/3 flex flex-col p-4 space-y-4">
-          {/* RETRO PLAYER (no rounding, single shade of blue #507ACF) */}
-          <div className="border-4 border-[#507ACF]">
-            <div className="bg-[#507ACF] text-white px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md">
-              <span>RETRO PLAYER</span>
-              <Link to="/" className="text-white hover:text-yellow-200 font-extrabold">
-                [x]
+    <div className={`min-h-screen ${containerBG} text-gray-100 font-sans`}>
+      <div className="flex flex-col md:flex-row">
+        {/* LEFT COLUMN - Audio Player & Welcome */}
+        <div className="md:w-1/3 p-4 space-y-4">
+          <div className={cardFrame}>
+            <div className={`${headerBG} ${headerText} px-4 py-3 flex items-center justify-between`}>
+              <span className="text-lg font-bold">AUDIO PLAYER</span>
+              <Link to="/" className="text-gray-100 hover:text-yellow-300 font-bold">
+                [Close]
               </Link>
             </div>
-            <div className="bg-[#ECE9D8] shadow-md p-4 text-xs md:text-sm">
-              {/* Controls */}
-              <div className="flex items-center mb-3">
-                <button
-                  onClick={handlePrev}
-                  className="bg-gray-300 hover:bg-gray-400 px-2 py-1 mr-1"
-                >
+            <div className={`${bodyBG} ${bodyText} p-4`}>
+              <div className="flex items-center space-x-3 mb-4">
+                <button onClick={handlePrev} className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded">
                   <FaBackward />
                 </button>
-                <button
-                  onClick={handlePlayPause}
-                  className="bg-gray-300 hover:bg-gray-400 px-2 py-1 mr-1"
-                >
+                <button onClick={handlePlayPause} className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded">
                   {isPlaying ? <FaPause /> : <FaPlay />}
                 </button>
-                <button
-                  onClick={handleNext}
-                  className="bg-gray-300 hover:bg-gray-400 px-2 py-1 mr-2"
-                >
+                <button onClick={handleNext} className="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded">
                   <FaForward />
                 </button>
-                {/* Volume */}
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center space-x-2">
                   <FaVolumeUp />
                   <input
                     type="range"
@@ -186,13 +151,11 @@ export default function SecretPage() {
                     step="0.01"
                     value={volume}
                     onChange={(e) => setVolume(Number(e.target.value))}
-                    className="w-16 md:w-20"
+                    className="w-24"
                   />
                 </div>
               </div>
-
-              {/* Playlist */}
-              <div className="border border-gray-300 p-2 text-xs">
+              <div className="border border-blue-700 p-4 rounded">
                 {songs.map((song, idx) => {
                   const isCurrent = idx === currentSongIndex;
                   return (
@@ -202,14 +165,12 @@ export default function SecretPage() {
                         setCurrentSongIndex(idx);
                         setIsPlaying(true);
                       }}
-                      className={`flex items-center px-2 py-1 mb-1 cursor-pointer ${
-                        isCurrent
-                          ? "bg-blue-200 font-semibold"
-                          : "hover:bg-gray-100"
+                      className={`flex items-center px-3 py-2 mb-2 cursor-pointer rounded ${
+                        isCurrent ? "bg-blue-700 font-semibold" : "hover:bg-gray-800"
                       }`}
                     >
                       {isCurrent ? (
-                        <FaCompactDisc className="animate-spin mr-2 text-blue-600" />
+                        <FaCompactDisc className="animate-spin mr-2 text-blue-300" />
                       ) : (
                         <FaCompactDisc className="mr-2 text-gray-400" />
                       )}
@@ -220,62 +181,56 @@ export default function SecretPage() {
               </div>
             </div>
           </div>
-
-          {/* WELCOME WINDOW (no rounding) */}
-          <div className="border-4 border-[#507ACF]">
-            <div className="bg-[#507ACF] text-white px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md">
-              <span>WELCOME</span>
-              <Link to="/" className="text-white hover:text-yellow-200 font-extrabold">
-                [x]
+          <div className={cardFrame}>
+            <div className={`${headerBG} ${headerText} px-4 py-3 flex items-center justify-between`}>
+              <span className="text-lg font-bold">WELCOME</span>
+              <Link to="/" className="text-gray-100 hover:text-yellow-300 font-bold">
+                [Close]
               </Link>
             </div>
-            <div className="bg-[#ECE9D8] shadow-md p-4 text-xs md:text-sm">
-              <p className="mb-2 text-gray-700">
-                Hello There! Leave a comment and be remembered forever. Assign a
-                name or don’t! Take your time here to either leave something
-                behind or explore people’s stories!
+            <div className={`${bodyBG} ${bodyText} p-4`}>
+              <p className="mb-2">
+                Hello There! Leave a comment and be remembered forever. Assign a name or don’t! Take your time here to either leave something behind or explore people’s stories!
               </p>
-              <p className="text-gray-700">
+              <p>
                 The choice is yours. Make your mark or just enjoy the vibe.
               </p>
             </div>
           </div>
         </div>
 
-        {/* RIGHT COLUMN => THE GUESTBOOK (no rounding, newest first) */}
-        <div className="md:w-2/3 flex flex-col p-4">
-          <div className="border-4 border-[#507ACF]">
-            <div className="bg-[#507ACF] text-white px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md">
-              <span>THE GUESTBOOK</span>
-              <Link to="/" className="text-white hover:text-yellow-200 font-extrabold">
-                [x]
+        {/* RIGHT COLUMN - Guestbook */}
+        <div className="md:w-2/3 p-4">
+          <div className={cardFrame}>
+            <div className={`${headerBG} ${headerText} px-4 py-3 flex items-center justify-between`}>
+              <span className="text-lg font-bold">GUESTBOOK</span>
+              <Link to="/" className="text-gray-100 hover:text-yellow-300 font-bold">
+                [Close]
               </Link>
             </div>
-            <div className="bg-[#ECE9D8] shadow-md p-4 text-xs md:text-sm flex-grow">
-              <p className="mb-2 text-right text-gray-600">
+            <div className={`${bodyBG} ${bodyText} p-4 flex flex-col`}>
+              <p className="mb-4 text-right text-gray-300">
                 Signed in as: <span className="font-bold">{user?.uid || "Guest"}</span>
               </p>
               <textarea
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
-                className="w-full p-2 text-black mb-2"
+                className="w-full p-3 text-gray-900 mb-4 rounded"
                 placeholder="Leave a message..."
               />
               <button
                 onClick={handleAddPost}
-                className="bg-[#507ACF] hover:bg-[#3B63A8] text-white px-4 py-1 font-semibold"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 font-semibold rounded"
               >
                 Post
               </button>
-
-              <div className="mt-4 flex flex-col items-start space-y-2 overflow-y-auto pr-2">
+              <div className="mt-4 space-y-3 overflow-y-auto max-h-64 pr-2">
                 {posts.map((p) => {
                   if (!p.text.trim()) return null;
                   return (
                     <div
                       key={p.id}
-                      className="bg-white border border-gray-300 px-3 py-1 
-                                 text-xs md:text-sm max-w-max"
+                      className="bg-gray-100 border border-blue-700 px-3 py-2 rounded text-gray-900 text-lg"
                       style={{ wordWrap: "break-word" }}
                     >
                       {p.text}

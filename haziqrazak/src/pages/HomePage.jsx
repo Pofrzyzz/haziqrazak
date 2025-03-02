@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-// Additional react-icons for proficiencies
 import {
   FaGithub,
   FaLinkedin,
@@ -12,12 +11,9 @@ import {
   FaCertificate,
   FaBars,
   FaTimes,
-  FaMoon,
-  FaSun,
-  FaDatabase,
+  FaAws,
   FaHtml5,
   FaCss3,
-  FaAws,
 } from "react-icons/fa";
 import {
   SiGoland,
@@ -81,7 +77,7 @@ const proficiencies = [
   { name: "Golang", icon: <SiGoland /> },
   { name: "Adobe Photoshop", icon: <SiAdobephotoshop /> },
   { name: "Flask", icon: <SiFlask /> },
-  { name: "SQL", icon: <FaDatabase /> },
+  { name: "SQL", icon: <FaCertificate /> },
   { name: "AWS", icon: <FaAws /> },
   { name: "JavaScript", icon: <SiJavascript /> },
   { name: "Node", icon: <SiNodedotjs /> },
@@ -106,12 +102,6 @@ const getFormattedDate = () => {
 
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [theme, setTheme] = useState("xp"); // "modern" or "xp"
-
-  // Toggle between XP and modern
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "modern" ? "xp" : "modern"));
-  };
 
   // Smooth scroll
   const smoothScroll = (e, id) => {
@@ -123,175 +113,115 @@ export default function HomePage() {
     setMenuOpen(false);
   };
 
-  // Theme checks
-  const isXP = theme === "xp";
-
-  // Container background
-  // - XP => bliss.jpg
-  // - Modern => gradient
-  const containerBG = isXP
-    ? "bg-cover bg-center"
-    : "bg-gradient-to-r from-gray-900 to-blue-900";
-
-  // Navbar BG
-  const navbarBG = isXP ? "bg-[#507ACF]" : "bg-[#16213E]";
-
-  // Mobile dropdown BG
-  const mobileDropBG = isXP ? "bg-[#507ACF]" : "bg-[#16213E]";
-
-  // Title bar BG
-  const titleBarBG = isXP ? "bg-[#507ACF]" : "bg-gray-800";
-
-  // Container border style
-  const containerFrame = isXP
-    ? "border-4 border-[#507ACF]"
-    : "border border-gray-700 shadow-lg";
-
-  // Window body BG
-  const windowBodyBG = isXP ? "bg-[#ECE9D8]" : "bg-[#1F2937]";
-
-  // Text color inside container
-  const containerText = isXP ? "text-black" : "text-gray-100";
-
-  // Title bar text color
-  const titleBarTextColor = isXP ? "text-white" : "text-gray-100";
-
-  // Show or hide [x]
-  const showX = isXP;
-
-  // Certification hover style
-  const certHover = isXP ? "hover:bg-[#E1DEC9]" : "hover:bg-transparent";
+  // Modern design variables
+  const containerBG = "bg-gradient-to-br from-gray-800 to-blue-900";
+  const navbarBG = "bg-transparent backdrop-blur-md";
+  const mobileDropBG = "bg-blue-900";
+  const titleBarBG = "bg-blue-800";
+  const windowBodyBG = "bg-gray-900";
+  const containerFrame = "border border-blue-700 shadow-lg rounded-lg";
+  const containerText = "text-gray-100";
+  const titleBarTextColor = "text-gray-100";
+  const certHover = "hover:bg-blue-700";
 
   return (
-    <div
-      className={`min-h-screen font-['MS_Sans_Serif','Tahoma','Geneva','sans-serif'] flex flex-col ${containerBG}`}
-      style={isXP ? { backgroundImage: "url('/bliss.jpg')" } : {}}
-    >
+    <div className={`min-h-screen font-sans flex flex-col ${containerBG}`}>
       {/* NAVBAR */}
-      <div className={`${navbarBG} text-white sticky top-0 z-50 shadow-md`}>
-        <div className="max-w-5xl mx-auto px-4 py-2 flex items-center justify-between">
-          {/* Title */}
-          <div className="font-bold text-sm md:text-base">
-            {isXP ? "HaziqRazak XP" : "HaziqRazak Modern"}
-          </div>
-
-          {/* THEME TOGGLE */}
-          <motion.button
-            className="mr-2 flex items-center space-x-1 bg-white text-black px-2 py-1 rounded shadow focus:outline-none"
-            whileTap={{ scale: 0.9 }}
-            onClick={toggleTheme}
-          >
-            {isXP ? (
-              <>
-                <FaSun />
-                <span className="text-xs md:text-sm">Modern</span>
-              </>
-            ) : (
-              <>
-                <FaMoon />
-                <span className="text-xs md:text-sm">XP</span>
-              </>
-            )}
-          </motion.button>
-
-          {/* Hamburger (mobile) */}
+      <div className={`${navbarBG} sticky top-0 z-50`}>
+        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="font-bold text-xl text-gray-100">HaziqRazak</div>
           <button
-            className="text-white md:hidden focus:outline-none"
+            className="text-gray-100 md:hidden focus:outline-none"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            {menuOpen ? <FaTimes size={20} /> : <FaBars size={20} />}
+            {menuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
           </button>
-
-          {/* Desktop Nav */}
-          <div className="hidden md:flex space-x-4 text-sm font-bold">
+          <div className="hidden md:flex space-x-6 text-lg">
             <a
               href="#about-me"
               onClick={(e) => smoothScroll(e, "#about-me")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               About Me
             </a>
             <a
               href="#education"
               onClick={(e) => smoothScroll(e, "#education")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Education
             </a>
             <a
               href="#experience"
               onClick={(e) => smoothScroll(e, "#experience")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Experience
             </a>
             <a
               href="#projects"
               onClick={(e) => smoothScroll(e, "#projects")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Projects
             </a>
-            {/* New Proficiencies Link */}
             <a
               href="#proficiencies"
               onClick={(e) => smoothScroll(e, "#proficiencies")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Proficiencies
             </a>
             <a
               href="#certifications"
               onClick={(e) => smoothScroll(e, "#certifications")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Certifications
             </a>
           </div>
         </div>
-
-        {/* Mobile Nav */}
         {menuOpen && (
-          <div className={`flex flex-col items-start text-sm font-bold px-4 py-2 space-y-1 md:hidden ${mobileDropBG}`}>
+          <div className={`flex flex-col items-start text-lg font-semibold px-4 py-2 space-y-2 ${mobileDropBG}`}>
             <a
               href="#about-me"
               onClick={(e) => smoothScroll(e, "#about-me")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               About Me
             </a>
             <a
               href="#education"
               onClick={(e) => smoothScroll(e, "#education")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Education
             </a>
             <a
               href="#experience"
               onClick={(e) => smoothScroll(e, "#experience")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Experience
             </a>
             <a
               href="#projects"
               onClick={(e) => smoothScroll(e, "#projects")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Projects
             </a>
             <a
               href="#proficiencies"
               onClick={(e) => smoothScroll(e, "#proficiencies")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Proficiencies
             </a>
             <a
               href="#certifications"
               onClick={(e) => smoothScroll(e, "#certifications")}
-              className="hover:text-yellow-200"
+              className="hover:text-yellow-300 transition"
             >
               Certifications
             </a>
@@ -302,80 +232,43 @@ export default function HomePage() {
       {/* ABOUT ME */}
       <motion.section
         id="about-me"
-        className="container mx-auto px-4 py-4 md:py-6 w-full max-w-5xl mt-2 md:mt-6"
+        className="container mx-auto px-4 py-8 w-full max-w-5xl mt-8"
         initial="hidden"
         animate="visible"
         variants={fadeIn}
       >
-        <div className={`${containerFrame}`}>
-          <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
-            <span>ABOUT ME</span>
-            {showX && <span>[x]</span>}
+        <div className={containerFrame}>
+          <div className={`${titleBarBG} ${titleBarTextColor} px-4 py-3 flex items-center justify-between`}>
+            <span className="text-lg font-bold">ABOUT ME</span>
           </div>
-          <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
-            <h1 className="text-base md:text-2xl font-extrabold mb-2">
-              Haziq Razak
-            </h1>
-            <p className="mb-2 font-medium text-sm md:text-base">
-              I'm studying Information Technology at Ngee Ann Polytechnic in
-              Singapore.
+          <div className={`${windowBodyBG} ${containerText} p-6`}>
+            <h1 className="text-3xl font-extrabold mb-4">Haziq Razak</h1>
+            <p className="mb-4 text-lg">
+              I'm a 19-year-old software engineer and web developer with expertise in cloud architecture and cloud computing based in Singapore. I specialize in creating modern, interactive, and engaging web experiences.
             </p>
-            <p className="mb-2 font-light text-sm md:text-base">
-              I love watching movies and taking photos in my spare time. Some of
-              my favorite entertainment includes Star Wars, Spider-Man, and{" "}
-              <Link
-                to="/secret"
-                className="no-underline hover:underline"
-              >
-                How I Met Your Mother
-              </Link>
-              .
+            <p className="mb-4 text-lg">
+              Currently, I study Information Technology at Ngee Ann Polytechnic, Singapore. I enjoy blending creativity with technology to build sleek and playful interfaces.
             </p>
-            <p className="mb-4 font-light text-sm md:text-base">
-              My journey in photography began back in 2018, and since then, I
-              have been passionate about capturing moments through my lens.
-            </p>
-
-            <div className="flex flex-wrap space-x-4 mb-2">
-              <a
-                href="mailto:haziqrazak14.27@gmail.com"
-                className="hover:opacity-75"
-              >
-                <FaEnvelope size={20} />
+            <div className="flex space-x-4 mb-6">
+              <a href="mailto:haziqrazak14.27@gmail.com" className="hover:opacity-75">
+                <FaEnvelope size={24} />
               </a>
-              <a
-                href="https://github.com/Pofrzyzz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-75"
-              >
-                <FaGithub size={20} />
+              <a href="https://github.com/Pofrzyzz" target="_blank" rel="noopener noreferrer" className="hover:opacity-75">
+                <FaGithub size={24} />
               </a>
-              <a
-                href="https://www.linkedin.com/in/haziqrazakiscool/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-75"
-              >
-                <FaLinkedin size={20} />
+              <a href="https://www.linkedin.com/in/haziqrazakiscool/" target="_blank" rel="noopener noreferrer" className="hover:opacity-75">
+                <FaLinkedin size={24} />
               </a>
-              <a
-                href="https://www.instagram.com/pofrzcodes?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:opacity-75"
-              >
-                <FaInstagram size={20} />
+              <a href="https://www.instagram.com/pofrzcodes?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer" className="hover:opacity-75">
+                <FaInstagram size={24} />
               </a>
             </div>
-
             <a
               href="/resume.pdf"
               download
-              className={`inline-flex items-center space-x-2 px-3 py-1 font-bold text-xs md:text-sm
-                          ${isXP ? "bg-[#507ACF] text-white hover:bg-[#3B63A8]" : "bg-blue-600 text-white hover:bg-blue-800"}`}
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded transition"
             >
-              <FaDownload size={14} />
+              <FaDownload size={18} />
               <span>Download Resume</span>
             </a>
           </div>
@@ -385,38 +278,27 @@ export default function HomePage() {
       {/* EDUCATION */}
       <motion.section
         id="education"
-        className="container mx-auto px-4 py-4 md:py-6 w-full max-w-5xl"
+        className="container mx-auto px-4 py-8 w-full max-w-5xl"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeIn}
       >
-        <div className={`${containerFrame}`}>
-          <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
-            <span>EDUCATION</span>
-            {showX && <span>[x]</span>}
+        <div className={containerFrame}>
+          <div className={`${titleBarBG} ${titleBarTextColor} px-4 py-3 flex items-center justify-between`}>
+            <span className="text-lg font-bold">EDUCATION</span>
           </div>
-          <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
-            <div>
-              <div className="border border-gray-300 p-3">
-                <h3 className="text-sm md:text-base font-semibold">
-                  Ngee Ann Polytechnic
-                </h3>
-                <p className="text-xs md:text-sm text-gray-500">
-                  2023-2026 | Information Technology
-                </p>
-                <p className="mt-1 text-xs md:text-sm">
-                  - Participated in ICT Society
-                </p>
+          <div className={`${windowBodyBG} ${containerText} p-6`}>
+            <div className="space-y-6">
+              <div className="border-b border-blue-700 pb-4">
+                <h3 className="text-xl font-semibold">Ngee Ann Polytechnic</h3>
+                <p className="text-sm text-gray-300">2023-2026 | Information Technology</p>
+                <p className="mt-2 text-lg">- Participated in ICT Society</p>
               </div>
-              <div className="border border-gray-300 p-3 mt-3">
-                <h3 className="text-sm md:text-base font-semibold">
-                  Unity Secondary School
-                </h3>
-                <p className="text-xs md:text-sm text-gray-500">
-                  2019-2022 | O-levels
-                </p>
-                <ul className="list-disc list-inside mt-1 text-xs md:text-sm">
+              <div>
+                <h3 className="text-xl font-semibold">Unity Secondary School</h3>
+                <p className="text-sm text-gray-300">2019-2022 | O-levels</p>
+                <ul className="list-disc list-inside mt-2 text-lg">
                   <li>Vice-President of Unique Media Productions</li>
                   <li>OSOS Participation Award (2019-2022)</li>
                   <li>Winner of Intraschool Photography Competition</li>
@@ -431,50 +313,32 @@ export default function HomePage() {
       {/* EXPERIENCE */}
       <motion.section
         id="experience"
-        className="container mx-auto px-4 py-4 md:py-6 w-full max-w-5xl"
+        className="container mx-auto px-4 py-8 w-full max-w-5xl"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeIn}
       >
-        <div className={`${containerFrame}`}>
-          <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
-            <span>EXPERIENCE</span>
-            {showX && <span>[x]</span>}
+        <div className={containerFrame}>
+          <div className={`${titleBarBG} ${titleBarTextColor} px-4 py-3 flex items-center justify-between`}>
+            <span className="text-lg font-bold">EXPERIENCE</span>
           </div>
-          <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
-            <div>
-              <div className="border border-gray-300 p-3">
-                <h3 className="text-sm md:text-base font-semibold">
-                  OCBC Ignite Internship
-                </h3>
-                <p className="text-xs md:text-sm text-gray-500">
-                  2025-2026 | Internship
-                </p>
-                <p className="mt-1 text-xs md:text-sm">
-                  Upcoming Internship at OCBC ignite
-                </p>
+          <div className={`${windowBodyBG} ${containerText} p-6`}>
+            <div className="space-y-6">
+              <div className="border-b border-blue-700 pb-4">
+                <h3 className="text-xl font-semibold">OCBC Ignite Internship</h3>
+                <p className="text-sm text-gray-300">2025-2026 | Internship</p>
+                <p className="mt-2 text-lg">Upcoming Internship at OCBC Ignite</p>
               </div>
-              <div className="border border-gray-300 p-3 mt-3">
-                <h3 className="text-sm md:text-base font-semibold">
-                  Photography Assistant
-                </h3>
-                <p className="text-xs md:text-sm text-gray-500">
-                  2021-2022 | Freelance
-                </p>
-                <p className="mt-1 text-xs md:text-sm">
-                  Helped out at professional photoshoots at Gardens by the Bay and
-                  Botanic Gardens
-                </p>
+              <div className="border-b border-blue-700 pb-4">
+                <h3 className="text-xl font-semibold">Photography Assistant</h3>
+                <p className="text-sm text-gray-300">2021-2022 | Freelance</p>
+                <p className="mt-2 text-lg">Helped out at professional photoshoots at Gardens by the Bay and Botanic Gardens</p>
               </div>
-              <div className="border border-gray-300 p-3 mt-3">
-                <h3 className="text-sm md:text-base font-semibold">Bellman</h3>
-                <p className="text-xs md:text-sm text-gray-500">
-                  2022-2024 | Part-Time
-                </p>
-                <p className="mt-1 text-xs md:text-sm">
-                  Worked as a bellman/concierge at Marriott Tangs Plaza Hotel
-                </p>
+              <div>
+                <h3 className="text-xl font-semibold">Bellman</h3>
+                <p className="text-sm text-gray-300">2022-2024 | Part-Time</p>
+                <p className="mt-2 text-lg">Worked as a bellman/concierge at Marriott Tangs Plaza Hotel</p>
               </div>
             </div>
           </div>
@@ -484,33 +348,28 @@ export default function HomePage() {
       {/* PROJECTS */}
       <motion.section
         id="projects"
-        className="container mx-auto px-4 py-4 md:py-6 w-full max-w-5xl"
+        className="container mx-auto px-4 py-8 w-full max-w-5xl"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeIn}
       >
-        <div className={`${containerFrame}`}>
-          <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
-            <span>PROJECTS</span>
-            {showX && <span>[x]</span>}
+        <div className={containerFrame}>
+          <div className={`${titleBarBG} ${titleBarTextColor} px-4 py-3 flex items-center justify-between`}>
+            <span className="text-lg font-bold">PROJECTS</span>
           </div>
-          <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
-            <div>
-              <div className="border border-gray-300 p-3">
-                <h3 className="text-sm md:text-base font-semibold">
-                  Personal Website
-                </h3>
-                <p className="text-xs text-gray-500">React, Next.js, Vite</p>
-                <p className="mt-1 text-xs md:text-sm">
-                  My personal website
-                </p>
-                <div className="flex flex-wrap space-x-3 mt-2">
+          <div className={`${windowBodyBG} ${containerText} p-6`}>
+            <div className="space-y-6">
+              <div className="border-b border-blue-700 pb-4">
+                <h3 className="text-xl font-semibold">Personal Website</h3>
+                <p className="text-sm text-gray-300">React, Next.js, Vite</p>
+                <p className="mt-2 text-lg">My personal website</p>
+                <div className="flex space-x-4 mt-4">
                   <a
                     href="https://github.com/Pofrzyzz/haziqrazak"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 text-blue-400 hover:underline text-xs md:text-sm"
+                    className="flex items-center space-x-2 text-blue-300 hover:underline"
                   >
                     <FaGithub />
                     <span>GitHub</span>
@@ -519,45 +378,43 @@ export default function HomePage() {
                     href="https://haziqrazak.com"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 text-blue-400 hover:underline text-xs md:text-sm"
+                    className="flex items-center space-x-2 text-blue-300 hover:underline"
                   >
                     <FaLink />
                     <span>Website</span>
                   </a>
                 </div>
               </div>
-              <div className="border border-gray-300 p-3 mt-3">
-                <h3 className="text-sm md:text-base font-semibold">MyJams</h3>
-                <p className="text-xs text-gray-500">HTML, CSS, JS</p>
-                <p className="mt-1 text-xs md:text-sm">
-                  One of my first few projects. I just wanted a place to showcase
-                  all my playlists.
+              <div className="border-b border-blue-700 pb-4">
+                <h3 className="text-xl font-semibold">MyJams</h3>
+                <p className="text-sm text-gray-300">HTML, CSS, JS</p>
+                <p className="mt-2 text-lg">
+                  One of my first few projects. I just wanted a place to showcase all my playlists.
                 </p>
-                <div className="flex flex-wrap space-x-3 mt-2">
+                <div className="flex space-x-4 mt-4">
                   <a
                     href="https://pofrzyzz.github.io/MyJams/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 text-blue-400 hover:underline text-xs md:text-sm"
+                    className="flex items-center space-x-2 text-blue-300 hover:underline"
                   >
                     <FaLink />
                     <span>Live Demo</span>
                   </a>
                 </div>
               </div>
-              <div className="border border-gray-300 p-3 mt-3">
-                <h3 className="text-sm md:text-base font-semibold">BattleShip Bot</h3>
-                <p className="text-xs text-gray-500">Python</p>
-                <p className="mt-1 text-xs md:text-sm">
-                  In this project, I implemented a battleship bot that allows for users to play a traditional game of battleship against a computer.
-                  I also found a way to connect the bot to Discord. However since hosting requires money, it is not up 24/7. 
+              <div>
+                <h3 className="text-xl font-semibold">BattleShip Bot</h3>
+                <p className="text-sm text-gray-300">Python</p>
+                <p className="mt-2 text-lg">
+                  In this project, I implemented a battleship bot that allows users to play a traditional game of battleship against a computer. I also connected the bot to Discord, although hosting constraints apply.
                 </p>
-                <div className="flex flex-wrap space-x-3 mt-2">
+                <div className="flex space-x-4 mt-4">
                   <a
                     href="https://github.com/Pofrzyzz/BattleShipGame"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 text-blue-400 hover:underline text-xs md:text-sm"
+                    className="flex items-center space-x-2 text-blue-300 hover:underline"
                   >
                     <FaGithub />
                     <span>GitHub</span>
@@ -569,29 +426,25 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      {/* PROFICIENCIES (New Section) */}
+      {/* PROFICIENCIES */}
       <motion.section
         id="proficiencies"
-        className="container mx-auto px-4 py-4 md:py-6 w-full max-w-5xl"
+        className="container mx-auto px-4 py-8 w-full max-w-5xl"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeIn}
       >
-        <div className={`${containerFrame}`}>
-          <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
-            <span>PROFICIENCIES</span>
-            {showX && <span>[x]</span>}
+        <div className={containerFrame}>
+          <div className={`${titleBarBG} ${titleBarTextColor} px-4 py-3 flex items-center justify-between`}>
+            <span className="text-lg font-bold">PROFICIENCIES</span>
           </div>
-          <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
+          <div className={`${windowBodyBG} ${containerText} p-6`}>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
               {proficiencies.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-col items-center p-2 border border-gray-300"
-                >
-                  <div className="text-2xl mb-2">{item.icon}</div>
-                  <p className="text-center text-xs md:text-sm">{item.name}</p>
+                <div key={idx} className="flex flex-col items-center p-4 border border-blue-700 rounded-lg">
+                  <div className="text-3xl mb-2">{item.icon}</div>
+                  <p className="text-center text-lg">{item.name}</p>
                 </div>
               ))}
             </div>
@@ -602,32 +455,31 @@ export default function HomePage() {
       {/* CERTIFICATIONS */}
       <motion.section
         id="certifications"
-        className="container mx-auto px-4 py-4 md:py-6 w-full max-w-5xl mb-4 md:mb-6"
+        className="container mx-auto px-4 py-8 w-full max-w-5xl mb-8"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={fadeIn}
       >
-        <div className={`${containerFrame}`}>
-          <div className={`${titleBarBG} ${titleBarTextColor} px-3 py-2 flex items-center justify-between text-xs md:text-sm font-bold shadow-md`}>
-            <span>CERTIFICATIONS</span>
-            {showX && <span>[x]</span>}
+        <div className={containerFrame}>
+          <div className={`${titleBarBG} ${titleBarTextColor} px-4 py-3 flex items-center justify-between`}>
+            <span className="text-lg font-bold">CERTIFICATIONS</span>
           </div>
-          <div className={`${windowBodyBG} ${containerText} shadow-md p-4 md:p-6 text-xs md:text-sm`}>
-            <div>
+          <div className={`${windowBodyBG} ${containerText} p-6`}>
+            <div className="space-y-4">
               {certifications.map((cert, i) => (
                 <a
                   href={cert.link}
                   target="_blank"
                   rel="noopener noreferrer"
                   key={i}
-                  className={`block border border-gray-300 p-3 mt-3 first:mt-0 ${certHover}`}
+                  className={`block border border-blue-700 p-4 rounded ${certHover} transition`}
                 >
-                  <div className="flex items-center space-x-3">
-                    <FaCertificate className="text-blue-400" />
+                  <div className="flex items-center space-x-4">
+                    <FaCertificate className="text-blue-300" />
                     <div>
-                      <p className="font-semibold">{cert.name}</p>
-                      <p className="text-xs text-gray-500">{cert.date}</p>
+                      <p className="font-semibold text-lg">{cert.name}</p>
+                      <p className="text-sm text-gray-300">{cert.date}</p>
                     </div>
                   </div>
                 </a>
@@ -638,14 +490,9 @@ export default function HomePage() {
       </motion.section>
 
       {/* FOOTER */}
-      <footer
-        className={`text-white py-2 mt-auto ${
-          isXP ? "bg-[#507ACF]" : "bg-[#16213E]"
-        }`}
-      >
-        <p className="text-xs">
-          Last Updated: {getFormattedDate()} | 
-          {isXP ? " Windows XP Popup Theme" : " Modern Theme"}
+      <footer className="text-gray-300 py-4 mt-auto text-center">
+        <p className="text-sm">
+          Last Updated: {getFormattedDate()} | Modern Portfolio Design
         </p>
       </footer>
     </div>
