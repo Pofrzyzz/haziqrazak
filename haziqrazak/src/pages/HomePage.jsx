@@ -24,11 +24,12 @@ import {
   SiMongodb,
 } from "react-icons/si";
 
-/* -------------------------------
-   1) Star-like Particles (monochrome)
-------------------------------- */
+/* =========================
+   1) Particle Configuration 
+   (Monochrome star field)
+========================= */
 const particlesOptions = {
-  background: { color: "#00000000" },
+  background: { color: "#00000000" }, // Transparent
   fpsLimit: 60,
   interactivity: {
     events: {
@@ -65,9 +66,9 @@ const particlesOptions = {
   detectRetina: true,
 };
 
-/* -------------------------------
-   2) Data for 5 Right-Side Boxes
-------------------------------- */
+/* =========================
+   2) Boxes Data (5 Right-Side Boxes)
+========================= */
 const boxesData = [
   {
     id: "education",
@@ -310,7 +311,7 @@ const boxesData = [
 ];
 
 /* -------------------------------
-   3) Animation Variants
+   7) Animation Variants
 ------------------------------- */
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
@@ -322,28 +323,8 @@ const cardVariants = {
   },
 };
 
-/* Pop-up variants with transform effect based on cursor position */
-const popupVariants = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: (cursorPos) => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const rotateX = (centerY - cursorPos.clientY) / 30;
-    const rotateY = (cursorPos.clientX - centerX) / 30;
-    return {
-      opacity: 1,
-      scale: 1,
-      x: cursorPos.x,
-      y: cursorPos.y,
-      rotateX,
-      rotateY,
-      transition: { duration: 0.4 },
-    };
-  },
-};
-
 /* -------------------------------
-   4) Footer Date Helper
+   8) Footer Date Helper
 ------------------------------- */
 function getFormattedDate() {
   const today = new Date();
@@ -353,47 +334,34 @@ function getFormattedDate() {
 }
 
 /* -------------------------------
-   5) Main Component
+   9) Main Component
 ------------------------------- */
 export default function HomePage() {
-  const [selectedBox, setSelectedBox] = useState(null); // ID of pop-up box
+  const [selectedBox, setSelectedBox] = useState(null); // which box is open
   const [cursorPos, setCursorPos] = useState({
     x: 0,
     y: 0,
     clientX: 0,
     clientY: 0,
   });
-  const [aboutStyle, setAboutStyle] = useState({});
-  const [modalStyle, setModalStyle] = useState({});
+  const [tiltStyle, setTiltStyle] = useState({});
 
   const particlesInit = useCallback(async (engine) => {
     await loadFull(engine);
   }, []);
 
-  // Compute tilt effect based on mouse position relative to element's center
-  const computeTilt = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const deltaX = e.clientX - centerX;
-    const deltaY = centerY - e.clientY;
-    const rotateX = deltaY / 20;
-    const rotateY = deltaX / 20;
-    return { transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` };
+  // Global tilt effect for the grid & modal based on cursor position
+  const handleMouseMove = (e) => {
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const rotateX = (centerY - e.clientY) / 50;
+    const rotateY = (e.clientX - centerX) / 50;
+    setTiltStyle({
+      transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+    });
   };
 
-  // About Me box tilt effect handler
-  const handleAboutMouseMove = (e) => {
-    setAboutStyle(computeTilt(e));
-  };
-
-  // Modal pop-up tilt effect handler
-  const handleModalMouseMove = (e) => {
-    // For modal, we compute tilt relative to the modal container
-    setModalStyle(computeTilt(e));
-  };
-
-  // When a right-side box is clicked, store pop-up position based on cursor
+  // When a right-side box is clicked, compute pop-up position
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setCursorPos({
@@ -409,11 +377,12 @@ export default function HomePage() {
     <div
       className="relative min-h-screen w-full text-gray-100 font-sans overflow-hidden"
       style={{
-        backgroundImage: "url('/space-bg.jpg')", // Your space-themed background in public folder
+        backgroundImage: "url('/space-bg.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
+      onMouseMove={handleMouseMove}
     >
       {/* Star-like Particles */}
       <Particles
@@ -425,16 +394,21 @@ export default function HomePage() {
 
       {/* Top Bar with "HaziqRazak" (static) */}
       <div className="bg-black bg-opacity-60 backdrop-blur-sm px-4 py-3 z-20">
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">HaziqRazak</h1>
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">
+          HaziqRazak
+        </h1>
       </div>
 
-      {/* Main Layout: Centered both vertically and horizontally */}
-      <div className="flex-1 flex items-center justify-center relative z-10 px-4">
+      {/* Main Layout: Centered grid with tilt effect applied globally */}
+      <div
+        className="flex-1 flex items-center justify-center relative z-10 px-4"
+        style={tiltStyle}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
-          {/* LEFT COLUMN: About Me with tilt effect */}
+          {/* LEFT COLUMN: About Me (with tilt effect) */}
           <motion.div
-            onMouseMove={handleAboutMouseMove}
-            style={aboutStyle}
+            onMouseMove={handleMouseMove}
+            style={tiltStyle}
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
@@ -442,8 +416,9 @@ export default function HomePage() {
           >
             <h2 className="text-2xl md:text-3xl font-bold mb-4">About Me</h2>
             <p className="text-base md:text-lg mb-4 leading-relaxed">
-              I’m a <strong>19-year-old</strong> student from <strong>Singapore</strong>.
-              Currently, I study Information Technology at Ngee Ann Polytechnic.
+              I’m a <strong>19-year-old</strong> student from{" "}
+              <strong>Singapore</strong>. I study Information Technology at Ngee Ann
+              Polytechnic.
             </p>
             <div className="flex space-x-4 mb-4">
               <motion.a
@@ -513,7 +488,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* POP-UP MODAL WITH 3D TILT (same effect as About Me) */}
+      {/* POP-UP MODAL with same global tilt effect */}
       <AnimatePresence>
         {selectedBox && (
           <motion.div
@@ -526,10 +501,10 @@ export default function HomePage() {
           >
             <motion.div
               key="popup"
-              onMouseMove={handleModalMouseMove}
-              style={modalStyle}
+              onMouseMove={handleMouseMove}
+              style={tiltStyle}
               className="bg-[#1a1a1a] bg-opacity-80 text-gray-100 max-w-md w-full p-6 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
-              variants={popupVariants}
+              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }}
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0, scale: 0.8 }}
@@ -543,7 +518,7 @@ export default function HomePage() {
 
       {/* FOOTER */}
       <footer className="text-center text-gray-300 py-2 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | Monochrome Space Theme with 3D Pop-Ups
+        Last Updated: {getFormattedDate()} | Monochrome Space Theme with Global 3D Transform
       </footer>
     </div>
   );
