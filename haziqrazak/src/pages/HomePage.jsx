@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { motion } from "framer-motion";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
@@ -12,6 +12,7 @@ import {
   FaAws,
   FaHtml5,
   FaCss3,
+  FaExternalLinkAlt, // <-- Replaces FaLink
 } from "react-icons/fa";
 import {
   SiGoland,
@@ -26,7 +27,7 @@ import {
   SiMongodb,
 } from "react-icons/si";
 
-/* 1) Enhanced Particle System - black/gray theme with interactive effect */
+/* Interactive Particles Configuration */
 const particlesOptions = {
   fpsLimit: 60,
   interactivity: {
@@ -64,7 +65,7 @@ const particlesOptions = {
   detectRetina: true,
 };
 
-/* 2) Certifications (All) */
+/* Certifications (All) */
 const certifications = [
   {
     name: "Professional Scrum Master™ I (PSM I)",
@@ -98,7 +99,7 @@ const certifications = [
   },
 ];
 
-/* 3) Proficiencies (All) */
+/* Proficiencies (All) */
 const proficiencies = [
   { name: "Golang", icon: <SiGoland /> },
   { name: "Adobe Photoshop", icon: <SiAdobephotoshop /> },
@@ -124,7 +125,7 @@ const proficiencies = [
   },
 ];
 
-/* 4) Card animation variants */
+/* Card animation variants */
 const cardVariants = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
   visible: {
@@ -135,7 +136,7 @@ const cardVariants = {
   },
 };
 
-/* 5) Helper: Format date for footer */
+/* Helper: Format date for the footer */
 const getFormattedDate = () => {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -148,9 +149,6 @@ export default function HomePage() {
     await loadFull(engine);
   }, []);
 
-  /* 6) We removed the navbar, only keep "HaziqRazak" at the top center */
-  // We will place "About Me" in the center of the top row.
-
   return (
     <div className="relative min-h-screen w-full bg-black font-sans overflow-hidden text-gray-200">
       {/* Interactive Particles */}
@@ -161,7 +159,7 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Top Branding */}
+      {/* Top Branding (No Navbar) */}
       <div className="pt-4 pb-2 text-center">
         <motion.h1
           whileHover={{ scale: 1.05 }}
@@ -173,14 +171,8 @@ export default function HomePage() {
 
       {/* GRID Layout */}
       <div className="container mx-auto px-4 pb-8">
-        {/* We create 4 rows: 
-            1) Single row: About Me (center)
-            2) Row: Education (left), Experience (right)
-            3) Row: Projects (left) - you can add more if needed
-            4) Row: Proficiencies (left), Certifications (right)
-        */}
+        {/* Row 1: About Me in center */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* ROW 1: "About Me" in center, blank columns on left & right */}
           <div className="hidden md:block" /> {/* Blank left col */}
           <motion.div
             variants={cardVariants}
@@ -195,14 +187,14 @@ export default function HomePage() {
               I’m a <strong>19-year-old software engineer</strong> and{" "}
               <strong>web developer</strong> based in <strong>Singapore</strong>,
               specializing in <strong>cloud architecture</strong> and{" "}
-              <strong>cloud computing</strong>. I love creating modern, 
+              <strong>cloud computing</strong>. I love creating modern,
               interactive experiences that scale globally.
             </p>
             <p className="text-sm mb-4 text-center">
-              Currently studying <strong>Information Technology</strong> at Ngee Ann Polytechnic, I’ve
-              worked on multiple full-stack applications, leading to a 
-              <strong> 20% improvement</strong> in deployment efficiency 
-              through cloud automation.
+              Currently studying <strong>Information Technology</strong> at Ngee
+              Ann Polytechnic, I’ve worked on multiple full-stack applications,
+              leading to a <strong>20% improvement</strong> in deployment
+              efficiency through cloud automation.
             </p>
             <div className="flex justify-center space-x-4 mb-4">
               <motion.a
@@ -256,7 +248,7 @@ export default function HomePage() {
           <div className="hidden md:block" /> {/* Blank right col */}
         </div>
 
-        {/* ROW 2: Education & Experience */}
+        {/* Row 2: Education & Experience */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <motion.div
             variants={cardVariants}
@@ -269,7 +261,7 @@ export default function HomePage() {
             <h2 className="text-xl font-bold mb-2">Education</h2>
             <div className="mb-4">
               <h3 className="font-semibold text-sm">Ngee Ann Polytechnic</h3>
-              <p className="text-xs text-gray-400">2023–2026 | Information Technology</p>
+              <p className="text-xs text-gray-400">2023–2026 | IT</p>
               <ul className="list-disc list-inside mt-1 text-xs">
                 <li>Member, ICT Society</li>
                 <li>Focus on Cloud Computing & Full-Stack Dev</li>
@@ -312,7 +304,9 @@ export default function HomePage() {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-sm">Bellman, Marriott Tangs Plaza</h3>
+              <h3 className="font-semibold text-sm">
+                Bellman, Marriott Tangs Plaza
+              </h3>
               <p className="text-xs text-gray-400">2022–2024 | Part-Time</p>
               <ul className="list-disc list-inside mt-1 text-xs">
                 <li>Enhanced customer service & communication skills</li>
@@ -322,7 +316,7 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        {/* ROW 3: Projects (left) - add more columns if you want more sections */}
+        {/* Row 3: Projects */}
         <div className="grid grid-cols-1 mt-6">
           <motion.div
             variants={cardVariants}
@@ -356,7 +350,7 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   className="flex items-center space-x-1 text-xs text-gray-300 hover:underline"
                 >
-                  <FaLink />
+                  <FaExternalLinkAlt /> {/* <-- Replaced FaLink */}
                   <span>Website</span>
                 </a>
               </div>
@@ -375,7 +369,7 @@ export default function HomePage() {
                   rel="noopener noreferrer"
                   className="flex items-center space-x-1 text-xs text-gray-300 hover:underline"
                 >
-                  <FaLink />
+                  <FaExternalLinkAlt /> {/* <-- Replaced FaLink */}
                   <span>Live Demo</span>
                 </a>
               </div>
@@ -402,7 +396,7 @@ export default function HomePage() {
           </motion.div>
         </div>
 
-        {/* ROW 4: Proficiencies & Certifications */}
+        {/* Row 4: Proficiencies & Certifications */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <motion.div
             variants={cardVariants}
@@ -458,7 +452,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* FOOTER */}
+      {/* Footer */}
       <footer className="text-center text-gray-400 py-3 text-xs">
         Last Updated: {getFormattedDate()} | Black/Grey/Lead Theme
       </footer>
