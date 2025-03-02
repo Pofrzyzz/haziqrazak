@@ -29,7 +29,7 @@ import {
    (Monochrome star field)
 ========================= */
 const particlesOptions = {
-  background: { color: "#00000000" }, // Transparent
+  background: { color: "#00000000" }, // transparent so the background image shows
   fpsLimit: 60,
   interactivity: {
     events: {
@@ -67,7 +67,7 @@ const particlesOptions = {
 };
 
 /* =========================
-   2) Boxes Data (5 Right-Side Boxes)
+   2) Data for 5 Boxes (Right Column)
 ========================= */
 const boxesData = [
   {
@@ -310,9 +310,9 @@ const boxesData = [
   },
 ];
 
-/* -------------------------------
-   7) Animation Variants
-------------------------------- */
+/* =========================
+   3) Animation Variants
+========================= */
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.95, y: 20 },
   visible: {
@@ -323,9 +323,18 @@ const cardVariants = {
   },
 };
 
-/* -------------------------------
-   8) Footer Date Helper
-------------------------------- */
+/* Global tilt effect for the grid and modal */
+const computeGlobalTilt = (e) => {
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  const rotateX = (centerY - e.clientY) / 50;
+  const rotateY = (e.clientX - centerX) / 50;
+  return { transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)` };
+};
+
+/* =========================
+   4) Footer Date Helper
+========================= */
 function getFormattedDate() {
   const today = new Date();
   return `${String(today.getDate()).padStart(2, "0")}/${String(
@@ -333,35 +342,29 @@ function getFormattedDate() {
   ).padStart(2, "0")}/${today.getFullYear()}`;
 }
 
-/* -------------------------------
-   9) Main Component
-------------------------------- */
+/* =========================
+   5) Main Component
+========================= */
 export default function HomePage() {
-  const [selectedBox, setSelectedBox] = useState(null); // which box is open
+  const [selectedBox, setSelectedBox] = useState(null); // which box is open (id)
   const [cursorPos, setCursorPos] = useState({
     x: 0,
     y: 0,
     clientX: 0,
     clientY: 0,
   });
-  const [tiltStyle, setTiltStyle] = useState({});
+  const [globalTilt, setGlobalTilt] = useState({});
 
   const particlesInit = useCallback(async (engine) => {
     await loadFull(engine);
   }, []);
 
-  // Global tilt effect for the grid & modal based on cursor position
-  const handleMouseMove = (e) => {
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const rotateX = (centerY - e.clientY) / 50;
-    const rotateY = (e.clientX - centerX) / 50;
-    setTiltStyle({
-      transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-    });
+  // Global tilt effect handler for entire grid and modal
+  const handleGlobalMouseMove = (e) => {
+    setGlobalTilt(computeGlobalTilt(e));
   };
 
-  // When a right-side box is clicked, compute pop-up position
+  // When a right-side box is clicked, compute pop-up position based on cursor
   const handleBoxClick = (id, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setCursorPos({
@@ -375,14 +378,14 @@ export default function HomePage() {
 
   return (
     <div
-      className="relative min-h-screen w-full text-gray-100 font-sans overflow-hidden"
+      className="flex flex-col min-h-screen text-gray-100 font-sans overflow-hidden"
       style={{
-        backgroundImage: "url('/space-bg.jpg')",
+        backgroundImage: "url('/space-bg.jpg')", // Your space-themed image in public folder
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
-      onMouseMove={handleMouseMove}
+      onMouseMove={handleGlobalMouseMove}
     >
       {/* Star-like Particles */}
       <Particles
@@ -392,23 +395,16 @@ export default function HomePage() {
         className="absolute top-0 left-0 w-full h-full -z-10"
       />
 
-      {/* Top Bar with "HaziqRazak" (static) */}
-      <div className="bg-black bg-opacity-60 backdrop-blur-sm px-4 py-3 z-20">
-        <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">
-          HaziqRazak
-        </h1>
+      {/* Top Bar with "HaziqRazak" (moved a bit to the right) */}
+      <div className="bg-black bg-opacity-60 backdrop-blur-sm px-6 py-3 z-20">
+        <h1 className="text-3xl md:text-4xl font-extrabold tracking-wide">HaziqRazak</h1>
       </div>
 
-      {/* Main Layout: Centered grid with tilt effect applied globally */}
-      <div
-        className="flex-1 flex items-center justify-center relative z-10 px-4"
-        style={tiltStyle}
-      >
+      {/* Main Layout: Global tilt applied */}
+      <div className="flex-1 flex items-center justify-center relative z-10 px-4" style={globalTilt}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-6xl">
-          {/* LEFT COLUMN: About Me (with tilt effect) */}
+          {/* LEFT COLUMN: About Me with global tilt */}
           <motion.div
-            onMouseMove={handleMouseMove}
-            style={tiltStyle}
             variants={cardVariants}
             initial="hidden"
             whileInView="visible"
@@ -417,8 +413,7 @@ export default function HomePage() {
             <h2 className="text-2xl md:text-3xl font-bold mb-4">About Me</h2>
             <p className="text-base md:text-lg mb-4 leading-relaxed">
               I’m a <strong>19-year-old</strong> student from{" "}
-              <strong>Singapore</strong>. I study Information Technology at Ngee Ann
-              Polytechnic.
+              <strong>Singapore</strong>. I study Information Technology at Ngee Ann Polytechnic.
             </p>
             <div className="flex space-x-4 mb-4">
               <motion.a
@@ -488,7 +483,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* POP-UP MODAL with same global tilt effect */}
+      {/* POP-UP MODAL with global tilt effect */}
       <AnimatePresence>
         {selectedBox && (
           <motion.div
@@ -501,10 +496,13 @@ export default function HomePage() {
           >
             <motion.div
               key="popup"
-              onMouseMove={handleMouseMove}
-              style={tiltStyle}
-              className="bg-[#1a1a1a] bg-opacity-80 text-gray-100 max-w-md w-full p-6 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
-              variants={{ hidden: { opacity: 0 }, visible: { opacity: 1, transition: { duration: 0.4 } } }}
+              onMouseMove={handleGlobalMouseMove}
+              style={globalTilt}
+              className="bg-[#1a1a1a] bg-opacity-80 text-gray-100 max-w-lg w-full p-8 rounded-lg shadow-xl border border-gray-700 relative cursor-auto"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { duration: 0.4 } },
+              }}
               initial="hidden"
               animate="visible"
               exit={{ opacity: 0, scale: 0.8 }}
@@ -516,9 +514,9 @@ export default function HomePage() {
         )}
       </AnimatePresence>
 
-      {/* FOOTER */}
-      <footer className="text-center text-gray-300 py-2 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
-        Last Updated: {getFormattedDate()} | Monochrome Space Theme with Global 3D Transform
+      {/* Footer */}
+      <footer className="mt-auto text-center text-gray-300 py-2 text-xs bg-black bg-opacity-60 backdrop-blur-sm">
+        Last Updated: {getFormattedDate()} | HaziqRazak © {new Date().getFullYear()}
       </footer>
     </div>
   );
