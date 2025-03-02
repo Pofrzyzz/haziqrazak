@@ -2,7 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Simple modern fade-in animation */
+/* Animated gradient background */
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.bg-animate {
+  background-size: 200% 200%;
+  animation: gradientAnimation 15s ease infinite;
+}
+
+/* Simple fade-in animation for any extra elements */
 @keyframes fadeInUp {
   from {
     opacity: 0;
